@@ -65,8 +65,8 @@ public class UserBean implements Serializable {
         Connection connection = null;
 
         String url = "jdbc:mysql://localhost/" + dbName;
-        String username = "root";
-        String password = "MY2630142@sql_root99";
+        String username = "guest";
+        String password = "11111guest";
 
         try {           
             Class.forName("com.mysql.jdbc.Driver");
