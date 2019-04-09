@@ -8,7 +8,7 @@
     </h:head>
     <h:body>
         <h:form class="authorization_result">            
-            <h:outputText value="#{testBean.showResult()}"/>
+            <h:outputText value="#{userBean.showResult()}"/>
             <br/><br/>
             
             <h:outputLabel for="retry">
@@ -17,7 +17,9 @@
             <br/><br/>            
             <h:commandButton id="retry" value="retry" action="index"/>
             
-            <h:commandButton id="viewUsersButton" value="View users" action="#{testBean.viewUsers()}" />
+            <h:commandButton id="viewUsersButton" value="View users" action="#{userBean.viewUsers()}" />
+            
+            <h:commandButton id="wallButton" value="View profile" action="#{userBean.showWall()}" />
         </h:form>
     </h:body>
 </html>

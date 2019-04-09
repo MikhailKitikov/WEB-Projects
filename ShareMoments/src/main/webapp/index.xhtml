@@ -5,22 +5,23 @@
     <h:head>
         <title>Log in</title>
         <h:outputStylesheet library="css" name="styles.css"/>
+        
     </h:head>
     <h:body>
         <h:form class="login_form">            
             <h:outputLabel for="login">
                 <h:outputText value="Login: "/>
             </h:outputLabel>
-            <h:inputText id="login" value="#{testBean.login}" autocomplete="off"/>
+            <h:inputText id="login" value="#{userBean.login}" autocomplete="off"/>
             <br/><br/>
             
             <h:outputLabel for="password">
                 <h:outputText value="Password: "/>
             </h:outputLabel>
-            <h:inputSecret id="password" value="#{testBean.password}" autocomplete="off"/>
+            <h:inputSecret id="password" value="#{userBean.password}" autocomplete="off"/>
             <br/><br/>
             
-            <h:commandButton id="submit" value="Submit" action="#{testBean.display()}" />            
+            <h:commandButton id="submit" value="Submit" action="#{userBean.display()}" />            
         </h:form>
     </h:body>
 </html>
