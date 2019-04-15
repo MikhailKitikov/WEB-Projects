@@ -11,6 +11,17 @@
     </h:head>
     
     <h:body>
+        
+        <div class='header' id='header'>
+            <a href="index.xhtml"><h:graphicImage
+                library="images"
+                name= "1.png"
+                style="width:30px; height:30px;"
+                id="logo"
+                /></a>
+        </div>
+        
+        
         <center>            
             <h:panelGrid id="postPanel" columns="3" rules="none">
                 <c:forEach var="postItem" items="#{userBean.photoPosts}">
@@ -19,7 +30,7 @@
                             library="images"
                             name= "#{postItem.src}"
                             style="width:150px; height:150px;"
-                            id="#{postItem.sid}"
+                            id='#{postItem}'
                             onclick="showImage(id); return false;"
                             onmouseout="hideImage(id); return false;"
                             />

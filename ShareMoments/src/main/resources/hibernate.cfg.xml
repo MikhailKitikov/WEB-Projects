@@ -43,9 +43,9 @@ Contributor(s):
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/profiles</property>
-    <property name="hibernate.connection.username">root</property>
-    <property name="hibernate.connection.password">MY2630142@sql_root99</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/profiles?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">guest</property>
+    <property name="hibernate.connection.password">11111guest</property>
     <mapping resource="mksoft/sharemoments/entity/User.hbm.xml"/>
     <mapping resource="mksoft/sharemoments/entity/PhotoPost.hbm.xml"/>
   </session-factory>

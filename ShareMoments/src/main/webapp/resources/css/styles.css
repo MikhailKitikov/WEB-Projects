@@ -56,3 +56,13 @@ td{
     transform: scale(1.1);
     transition: 0.25s;
 }
+
+.header {
+    position: fixed;
+    width: 100%;
+    height: 40px;
+    top:0;
+    left: 0;
+    background-color: purple;
+    padding: 8px;
+}

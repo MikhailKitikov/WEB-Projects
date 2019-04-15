@@ -1,24 +1,23 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Apr 9, 2019 2:11:38 AM by Hibernate Tools 4.3.1 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 9, 2019 7:52:20 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="mksoft.sharemoments.entity.User" table="User" catalog="profiles" optimistic-lock="version">
-        <id name="userId" type="java.lang.Integer">
-            <column name="user_id" />
-            <generator class="identity" />
-        </id>
-        <property name="login" type="string">
-            <column name="login" length="60" not-null="true" />
-        </property>
-        <property name="password" type="string">
-            <column name="password" length="60" not-null="true" />
-        </property>
-        <set name="photoPosts" table="PhotoPost" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="userID" not-null="true" />
-            </key>
-            <one-to-many class="mksoft.sharemoments.entity.PhotoPost" />
-        </set>
-    </class>
+  <class catalog="profiles" name="mksoft.sharemoments.entity.User" optimistic-lock="version" table="User">
+    <id name="userId" type="java.lang.Integer">
+      <column name="user_id"/>
+      <generator class="identity"/>
+    </id>
+    <property name="login" type="string">
+      <column length="60" name="login" not-null="true"/>
+    </property>
+    <property name="password" type="string">
+      <column length="60" name="password" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="photoPosts" table="PhotoPost">
+      <key>
+        <column name="userID" not-null="true"/>
+      </key>
+      <one-to-many class="mksoft.sharemoments.entity.PhotoPost"/>
+    </set>
+  </class>
 </hibernate-mapping>
