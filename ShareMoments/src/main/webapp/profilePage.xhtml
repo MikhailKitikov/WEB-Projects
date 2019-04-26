@@ -5,41 +5,41 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title>#{userBean.login}</title>
+        <title>#{profileViewBean.showUsername()}</title>
         <h:outputStylesheet library="css" name="styles.css" />
         <h:outputScript library='js' name='styleFuncs.js'/>
     </h:head>
     
     <h:body>
         
-        <div class='header' id='header'>
-            <a href="index.xhtml"><h:graphicImage
-                library="images"
-                name= "1.png"
-                style="width:30px; height:30px;"
-                id="logo"
-                /></a>
-        </div>
+        <div class='header' id='header' style="height: 50px;"  styleClass="login_color_scheme">            
+            <div id="kek">
+            <a href="authorization.xhtml">
+             <p style="margin: 0px;">🏖️ ShareMoments</p>
+            </a>
+            </div>
+        </div>       
         
-        
-        <center>            
+        <center>
+        <div style="position: absolute; top: 70px; width: 99%;">                        
             <h:panelGrid id="postPanel" columns="3" rules="none">
-                <c:forEach var="postItem" items="#{userBean.photoPosts}">
+                <c:forEach var="postItem" items="#{profileViewBean.photoPosts}">
                     <h:panelGrid columns="1" rules="none" class="postItem">
                         <h:graphicImage
                             library="images"
                             name= "#{postItem.src}"
                             style="width:150px; height:150px;"
-                            id='#{postItem}'
+                            id='#{postItem.toString()}'
                             onclick="showImage(id); return false;"
                             onmouseout="hideImage(id); return false;"
                             />
                         <h:outputText value="#{postItem.text}" />
                     </h:panelGrid>
                 </c:forEach>
-            </h:panelGrid>
-            
+            </h:panelGrid>   
+        </div>
         </center>
+        
     </h:body>
 </html>
 

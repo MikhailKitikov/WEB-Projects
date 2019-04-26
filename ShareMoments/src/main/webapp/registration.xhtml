@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Register</title>
+    <h:outputStylesheet library="css" name="styles.css"/>
+</h:head>
+
+<h:body style="background-image: url('resources/images/mainbg.jpg'); background-size: 1000px auto;background-repeat: no-repeat">
+    <h:form class="login_form">    
+        
+        <p:growl id="growl" showDetail="true" sticky="false" life="2000"/>         
+        
+        <p:panel header="Register" styleClass="login_color_scheme">
+            
+            <h:panelGrid columns="2" cellpadding="5">                    
+                <p:outputLabel for="login" value="Login: "/>
+                <p:inputText id="login" value="#{regBean.username}" required="true"/> 
+
+                <p:outputLabel for="password" value="Password: "/>
+                <p:password id="password" value="#{regBean.password}" required="true"/>     
+                
+                <p:outputLabel for="confirm_password" value="Confirm password: "/>
+                <p:password id="confirm_password" value="#{regBean.confirmPassword}" required="true"/> 
+            </h:panelGrid>
+
+            <p:commandButton id="submit" value="Sign up" action="#{regBean.register()}" update="@form"/> 
+     
+        </p:panel>             
+    </h:form>        
+</h:body>
+</html>

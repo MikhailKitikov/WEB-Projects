@@ -10,16 +10,13 @@
     <h:body>
         <center><h2>User's info</h2></center>
         <center>
-            <h:dataTable value="#{userBean.users}" var="user" border="2">
+            <h:dataTable value="#{logBean.getAllUsers()}" var="user" border="2">
                 <h:column>
-                    <f:facet name="header">User ID</f:facet> #{user.userId}
+                    <f:facet name="header">User ID</f:facet> #{user.username}
                 </h:column>
                 <h:column>
-                    <f:facet name="header">User login</f:facet> #{user.login}
+                    <f:facet name="header">User login</f:facet> #{user.password}
                 </h:column>
-                <h:column>
-                    <f:facet name="header">User password</f:facet> #{user.password}
-                 </h:column>
             </h:dataTable>
         </center>
     </h:body>
