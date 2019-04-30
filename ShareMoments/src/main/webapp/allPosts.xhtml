@@ -17,7 +17,7 @@
         
         <h:form>
             <p:growl id="msgs" showDetail="true" />
-            <p:menubar class='header'>
+            <p:menubar class='header' style="min-width: 700px;">
                 <p:menuitem>
                     <h:link outcome="index.xhtml?faces-redirect=true">
                         <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
@@ -34,11 +34,10 @@
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Quit" url="index?faces-redirect=true"/>
                 <f:facet name='options'>
-                    <h:panelGrid id="countryTable" columns="2" cellpadding="0">                                  
+                    <h:panelGrid id="countryTable" columns="2" cellpadding="0" style="position: absolute; right: 30px;">                                  
                         <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList()}">
                             <p:ajax event="itemSelect" listener="#{searchBean.onItemSelect}" update="msgs" />
-                        </p:autoComplete>          
-                        <p:panel style="width: 30px !important; opacity: 0;"/>
+                        </p:autoComplete>
                     </h:panelGrid>
                 </f:facet>
             </p:menubar>
@@ -47,12 +46,14 @@
         <center>
             <p:lightBox styleClass="imagebox" id="lighbox1">  
                 <ui:repeat value="#{profileViewBean.allPhotoPosts}" var="postItem" id='rep'>
-                        <h:outputLink value='resources/images/postItem.src'>
+                        <h:outputLink value='resources/images/#{postItem.src}'>                            
                             <h:graphicImage
                                 library="images"
                                 name= "#{postItem.src}"
-                                style="width:150px; height:150px; position: absolute; #{profileViewBean.sz()}"     
+                                style="width:150px; height:150px; position: absolute; #{profileViewBean.sz()}" 
+                                class="thumbnail"
                                 />
+                            <div class="thumbnail-overlay" style="#{profileViewBean.shadowSz()}"/>
                         </h:outputLink>
                     </ui:repeat>
             </p:lightBox>

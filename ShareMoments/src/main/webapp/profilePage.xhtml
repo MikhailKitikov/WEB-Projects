@@ -30,7 +30,7 @@
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Home" url="profilePage.xhtml?faces-redirect=true"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="Settings" url="#"/>
+                <p:menuitem value="+" url="createPost.xhtml?faces-redirect=true"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Quit" url="index?faces-redirect=true"/>
                 <f:facet name='options'>
@@ -65,10 +65,12 @@
             <ui:repeat value="#{profileViewBean.currentUserPhotoPosts}" var="postItem" id='rep'>
                 <h:outputLink value='resources/images/#{postItem.src}' title="#{postItem.text}">
                     <h:graphicImage
+                        class="thumbnail"
                         library="images"
                         name= "#{postItem.src}"
                         style="width:150px; height:150px; position: absolute; #{profileViewBean.sz()}"     
                         />
+                    <div class="thumbnail-overlay" style="#{profileViewBean.shadowSz()}"/>
                 </h:outputLink>
             </ui:repeat>
         </p:lightBox>

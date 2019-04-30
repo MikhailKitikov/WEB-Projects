@@ -44,13 +44,21 @@ public class ProfileViewBean implements Serializable {
     
     int offsetX = 180, offsetY = 220;
     int vert = 0, hor = 0;
+    int lastTop, lastLeft;
     
     public String sz() {
-        String res = String.format("top: %dpx; left: %dpx;", offsetY + vert * 160, offsetX + hor * 160);
+        lastTop = offsetY + vert * 160;
+        lastLeft = offsetX + hor * 160;
+        String res = String.format("top: %dpx; left: %dpx;", lastTop, lastLeft);
         if (++hor == 3) {
             hor = 0;
             ++vert;
         }
+        return res;
+    }
+    
+    public String shadowSz() {
+        String res = String.format("top: %dpx; left: %dpx;", lastTop, lastLeft);
         return res;
     }
     

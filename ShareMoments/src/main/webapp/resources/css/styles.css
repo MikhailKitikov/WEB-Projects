@@ -157,6 +157,23 @@ td{
   text-align: center;
 }
 
+.thumbnail {
+    z-index: 50;
+}
+
+.thumbnail-overlay {
+    opacity: 0;
+    background-color: black;
+    width: 150px;
+    height: 150px;
+    z-index: 60;
+    position: absolute;
+}
+
+.thumbnail-overlay:hover {
+    opacity: 0.3;
+}
+
 /*<!-- Images used to open the lightbox 
 <h:form>
     <p:commandButton value="open" onclick="openModal()"/>

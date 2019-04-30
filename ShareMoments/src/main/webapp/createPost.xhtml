@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>New post</title>
+    </h:head>
+    
+    <h:body>
+        
+        <h:form class='header'>
+            <p:growl id="msgs" showDetail="true" />
+            <p:menubar  class='header'>
+                <p:menuitem>
+                    <h:link outcome="index.xhtml?faces-redirect=true">
+                        <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
+                    </h:link>
+                </p:menuitem>
+                <p:menuitem value="           " disabled="true"/>
+                <p:menuitem value="All posts" url="allPosts.xhtml?faces-redirect=true"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Events" url="#"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Home" url="profilePage.xhtml?faces-redirect=true"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="+" url="createPost.xhtml?faces-redirect=true"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Quit" url="index?faces-redirect=true"/>
+                <f:facet name='options'>
+                    <h:panelGrid id="countryTable" columns="2" cellpadding="0">                                  
+                        <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList()}">
+                            <p:ajax event="itemSelect" listener="#{searchBean.onItemSelect}" update="msgs" />
+                        </p:autoComplete>          
+                        <p:panel style="width: 30px !important; opacity: 0;"/>
+                    </h:panelGrid>
+                </f:facet>
+            </p:menubar>
+        </h:form>
+        
+        <h:form enctype="multipart/form-data">
+            <p:growl id="messages" showDetail="true" />
+
+            <p:fileUpload value="#{fileUploadBean.file}" mode="simple"/>
+
+            <br /> <br />
+
+            <p:commandButton value="Submit" ajax="false" action="#{fileUploadBean.upload}" disabled="false" />
+        </h:form>
+        
+    </h:body>
+</html>
+
