@@ -19,12 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 @SessionScoped
 public class LoginBean implements Serializable {
     
-    private static final long serialVersionUID = 1L;    
-    //private User currentUser;
-    
+    private static final long serialVersionUID = 1L;        
     private String username;
     private String password;
-
     private boolean loginSuccess;
 
     @EJB

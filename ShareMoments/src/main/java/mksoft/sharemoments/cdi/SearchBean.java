@@ -29,12 +29,7 @@ public class SearchBean implements Serializable {
     
     @EJB
     private UserDAO userDAO;
-    
-//    public String searchUser(String name)
-//    {
-//        return userDAO.searchUser(name);
-//    }
-    
+
     private String username; 
 
     public String getUsername() {
@@ -45,15 +40,14 @@ public class SearchBean implements Serializable {
         this.username = username;
     }
  
-    // Method To Display List On The JSF Page
     public List<String> userList() {         
         List<String> resList = userDAO.getAllUsernames();
+        resList.remove("admin");
         Collections.sort(resList);
         return resList;  
     }
     
     public void onItemSelect(SelectEvent event) throws IOException {
-//        String a = (String)event.getObject();
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().put("currViewUser", username);
         FacesContext.getCurrentInstance().getExternalContext().redirect("profilePage.xhtml");

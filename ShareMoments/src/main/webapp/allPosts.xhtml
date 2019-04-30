@@ -9,14 +9,17 @@
     <h:head>
         <title>All posts</title>
         <h:outputStylesheet library="css" name="styles.css" />
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet"/>
         <!--<h:outputScript library='js' name='gallery.js'/>-->
     </h:head>
     <h:body>
         
         <h:form>
+            <p:growl id="msgs" showDetail="true" />
             <p:menubar class='header'>
                 <p:menuitem>
-                    <h:link outcome="authorization.xhtml?faces-redirect=true">
+                    <h:link outcome="index.xhtml?faces-redirect=true">
                         <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
                     </h:link>
                 </p:menuitem>
@@ -30,9 +33,13 @@
                 <p:menuitem value="Settings" url="#"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Quit" url="index?faces-redirect=true"/>
-                <f:facet name="options">
-                    <p:inputText style="margin:1px 10px 1px 1px; width: 100px; " placeholder="Search"/>
-                    <p:commandButton value="🔍" style="background-color: white; border-width: 0;"/>
+                <f:facet name='options'>
+                    <h:panelGrid id="countryTable" columns="2" cellpadding="0">                                  
+                        <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList()}">
+                            <p:ajax event="itemSelect" listener="#{searchBean.onItemSelect}" update="msgs" />
+                        </p:autoComplete>          
+                        <p:panel style="width: 30px !important; opacity: 0;"/>
+                    </h:panelGrid>
                 </f:facet>
             </p:menubar>
         </h:form>  
@@ -40,7 +47,7 @@
         <center>
             <p:lightBox styleClass="imagebox" id="lighbox1">  
                 <ui:repeat value="#{profileViewBean.allPhotoPosts}" var="postItem" id='rep'>
-                        <h:outputLink value='#{resource[profileViewBean.fullPath(postItem.src)]}'>
+                        <h:outputLink value='resources/images/postItem.src'>
                             <h:graphicImage
                                 library="images"
                                 name= "#{postItem.src}"

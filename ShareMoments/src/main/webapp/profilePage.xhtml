@@ -10,6 +10,7 @@
         <title>#{profileViewBean.showUsername()}</title>
         <h:outputStylesheet library="css" name="styles.css" />
         <h:outputScript library='js' name='styleFuncs.js'/>
+        <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet"/>
     </h:head>
     
     <h:body>
@@ -18,7 +19,7 @@
             <p:growl id="msgs" showDetail="true" />
             <p:menubar  class='header'>
                 <p:menuitem>
-                    <h:link outcome="authorization.xhtml?faces-redirect=true">
+                    <h:link outcome="index.xhtml?faces-redirect=true">
                         <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
                     </h:link>
                 </p:menuitem>
@@ -29,10 +30,10 @@
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Home" url="profilePage.xhtml?faces-redirect=true"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="Settings" url="#" onclick="closeBioPanel(); return false;"/>
+                <p:menuitem value="Settings" url="#"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Quit" url="index?faces-redirect=true"/>
-                <f:facet name="options">
+                <f:facet name='options'>
                     <h:panelGrid id="countryTable" columns="2" cellpadding="0">                                  
                         <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList()}">
                             <p:ajax event="itemSelect" listener="#{searchBean.onItemSelect}" update="msgs" />
