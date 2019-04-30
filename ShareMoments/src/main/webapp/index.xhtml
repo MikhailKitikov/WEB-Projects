@@ -8,22 +8,23 @@
         <h:outputStylesheet library="css" name="styles.css"/>
     </h:head>
     
-    <h:body style="background-size: 1000px auto;background-repeat: no-repeat">
+    <h:body style="">
         <h:form class="welcome_form">                          
-            
-            <p:panel header="Welcome to ShareMoments!" styleClass="login_color_scheme">
-                
-                <h:panelGrid columns="1" cellpadding="5" style="width:100%">  
-                    
-                    <p:outputLabel for="signIn" value="Go to my profile" style="float: left;"/>
-                    <p:commandButton id="signIn" value="Sign in" action="authorization?faces-redirect=true" style="width: 100%;"/> 
-                    
-                    <p:outputLabel for="signUp" value="New to ShareMoments?" style="float: left;"/>
-                    <p:commandButton id="signUp" value="Sign up" action="registration?faces-redirect=true" style="width: 100%;"/>          
-                
-                </h:panelGrid>
-                
-            </p:panel>          
+            <div class="module-border-wrap">
+                <p:panel styleClass="login_color_scheme" class="gradient-border-element">
+                    <center>
+                    <h:panelGrid columns="1" cellpadding="5" style="">  
+
+                        <p:outputLabel for="signIn" value="Go to my profile" style="float: left;"/>
+                        <p:commandButton id="signIn" value="Sign in" action="authorization?faces-redirect=true"  style="width: 100%; background-color: white;"/> 
+
+                        <p:outputLabel for="signUp" value="New to ShareMoments?" style="float: left;"/>
+                        <p:commandButton id="signUp" value="Sign up" action="registration?faces-redirect=true"  style="width: 100%; background-color: white;"/>          
+
+                    </h:panelGrid>
+                        </center>
+                </p:panel>       
+            </div>
             
         </h:form>
     </h:body>

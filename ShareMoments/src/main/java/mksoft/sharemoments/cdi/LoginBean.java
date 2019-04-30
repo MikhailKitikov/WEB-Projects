@@ -47,9 +47,12 @@ public class LoginBean implements Serializable {
             return "authorization";
         }
         loginSuccess = true;
+        boolean isAdmin = ("admin".equals(username));
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().put("username", username);
-        return "profilePage?faces-redirect=true";
+        context.getExternalContext().getSessionMap().put("currViewUser", username);
+        context.getExternalContext().getSessionMap().put("admin", isAdmin);
+        return (isAdmin ? "adminPage?faces-redirect=true" : "profilePage?faces-redirect=true");
     }
     
     public boolean validateInput() {        

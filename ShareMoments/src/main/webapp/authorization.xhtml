@@ -8,26 +8,28 @@
         <h:outputStylesheet library="css" name="styles.css"/>
     </h:head>    
     
-    <h:body style="background-image: url('resources/images/mainbg.jpg'); background-size: 1000px auto;background-repeat: no-repeat">
+    <h:body>
         <h:form class="login_form">             
             
             <p:growl id="growl" showDetail="true" sticky="false" life="2000"/>  
             
-            <p:panel header="Log in" styleClass="login_color_scheme" style="width: 500px">
+            <div class="module-border-wrap">
+                <p:panel styleClass="login_color_scheme" class="gradient-border-element">
                 
-                <h:panelGrid columns="2" cellpadding="5">   
-                    
-                    <p:outputLabel for="login" value="Login: "/>
-                    <p:inputText id="login" value="#{logBean.username}" required="true"/> 
-                    
-                    <p:outputLabel for="password" value="Password: "/>
-                    <p:password id="password" value="#{logBean.password}" required="true"/>
-                    
-                </h:panelGrid>                
-                
-                <p:commandButton id="submit" value="Sign in" action="#{logBean.login()}" update="@form"/> 
+                    <h:panelGrid columns="2" cellpadding="5">   
+
+                        <p:outputLabel for="login" value="Login: "/>
+                        <p:inputText id="login" value="#{logBean.username}" required="true"/> 
+
+                        <p:outputLabel for="password" value="Password: "/>
+                        <p:password id="password" value="#{logBean.password}" required="true"/>
+
+                    </h:panelGrid>                
+                    <br/>
+                    <p:commandButton id="submit" value="Sign in" action="#{logBean.login()}" update="@form" style="width: 100%; background-color: white;"/> 
             
-            </p:panel>             
+                </p:panel>  
+            </div>           
         </h:form>        
     </h:body>
 </html>

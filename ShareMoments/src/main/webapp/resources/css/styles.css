@@ -1,7 +1,39 @@
+* {
+    font-family: Helvetica;
+    color: black;
+}
+
 .login_form {
-    position: absolute;
-    left: 20%;
-    right: 20%;
+    min-width: 500px; 
+    left:0; 
+    right:0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    top: 20%;  
+    position: absolute; 
+    width: 60%;  
+}
+
+.welcome_form {
+    min-width: 300px; 
+    left:0; 
+    right:0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    top: 20%;  
+    position: absolute; 
+    width: 40%;  
+}
+
+.gradient-border-element {
+    padding: 2rem;
+    border-width: 0;
+}
+
+.module-border-wrap {
+    position: relative;
+    background: linear-gradient(to right, red, purple);
+    padding: 3px;
 }
 
 .all_users_table {
@@ -55,22 +87,38 @@ td{
     text-align: center;
 }
 
+.postItem {
+    position: relative;
+}
+
 .postItem:hover {
     transform: scale(1.01);
     transition: 0.25s;
 }
 
+.imagebox a{
+    margin-left:10px;
+}
+
 .header {
     position: fixed;
     width: 100%;
-    height: 50px;
+    height: 40px;
     top:0;
     left: 0;
-    background-color: lightsteelblue;
+    background-color: white;
     padding: 8px;
-    z-index: 100;
-    color: navy;
-    font-size: 30px;
+    z-index: 200;
+    color: black;
+    font-size: 15px;
+    color: black;
+    margin: 0;
+    border-width: 0;
+    border-bottom-width: 1px;
+}
+
+.ui-widget-header {
+    background-color: white;
 }
 
 #postPanel {
@@ -84,17 +132,72 @@ td{
 }
 
 .login_color_scheme {
-    background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,0.227328431372549) 0%, rgba(0,189,255,1) 100%);
+    background-color: white;
 }
 
-.welcome_form {
+#bioPanel {
+/*    transition-duration: 1s;*/
     position: absolute;
-    left: 20%;
-    right: 20%;
+    top: 60px;
+    width: 100%;
+    z-index: 100;
+    left: 0;
+    height: 120px;
+    border-width: 0;
 }
 
-.welcome_panel {
-    width: 40%;
-    left: 20%;
+.footer {
+  position: absolute;
+  width: 100%;
+  padding: 1rem;
+  left: 0;
+  background-color: whitesmoke;
+  border-width: 0;
+  text-align: center;
 }
+
+/*<!-- Images used to open the lightbox 
+<h:form>
+    <p:commandButton value="open" onclick="openModal()"/>
+</h:form>
+
+ The Modal/Lightbox 
+<div id="myModal" class="modal">
+  <span class="close cursor" onclick="closeModal()">&times;</span>
+  <div class="modal-content">
+      
+      <c:forEach items="#{profileViewBean.allPhotoPosts}" var="postItem">
+            <div class="mySlides">
+                <div class="numbertext">1 / 4</div>
+                <img src="1.jpeg"/>
+              </div>  
+        </c:forEach >      
+   
+
+     Next/previous controls 
+    <a class="prev" onclick="plusSlides(-1); return false;">&#10094;</a>
+    <a class="next" onclick="plusSlides(1); return false;">&#10095;</a>
+
+     Caption text 
+    <div class="caption-container">
+      <p id="caption"></p>
+    </div>
+
+     Thumbnail image controls 
+    <div class="column">
+      <img class="demo" src="img1.jpg" onclick="currentSlide(1)" alt="Nature">
+    </div>
+
+    <div class="column">
+      <img class="demo" src="img2.jpg" onclick="currentSlide(2)" alt="Snow">
+    </div>
+
+    <div class="column">
+      <img class="demo" src="img3.jpg" onclick="currentSlide(3)" alt="Mountains">
+    </div>
+
+    <div class="column">
+      <img class="demo" src="img4.jpg" onclick="currentSlide(4)" alt="Lights">
+    </div>
+  </div>
+</div>-->*/

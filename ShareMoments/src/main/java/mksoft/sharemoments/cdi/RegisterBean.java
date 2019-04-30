@@ -39,6 +39,9 @@ public class RegisterBean implements Serializable {
             return "registration";
         } 
         registerSuccess = true;
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().put("username", username);
+        context.getExternalContext().getSessionMap().put("currViewUser", username);
         return "display?faces-redirect=true";
     }
     
@@ -49,7 +52,7 @@ public class RegisterBean implements Serializable {
             return false;
         }
         if (!password.equals(confirmPassword)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Passwords does not match"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Passwords do not match"));
             return false;
         }
         return true;

@@ -11,27 +11,29 @@
     <h:outputStylesheet library="css" name="styles.css"/>
 </h:head>
 
-<h:body style="background-image: url('resources/images/mainbg.jpg'); background-size: 1000px auto;background-repeat: no-repeat">
+<h:body>
     <h:form class="login_form">    
         
         <p:growl id="growl" showDetail="true" sticky="false" life="2000"/>         
         
-        <p:panel header="Register" styleClass="login_color_scheme">
-            
-            <h:panelGrid columns="2" cellpadding="5">                    
-                <p:outputLabel for="login" value="Login: "/>
-                <p:inputText id="login" value="#{regBean.username}" required="true"/> 
+        <div class="module-border-wrap">
+            <p:panel styleClass="login_color_scheme" class="gradient-border-element">
 
-                <p:outputLabel for="password" value="Password: "/>
-                <p:password id="password" value="#{regBean.password}" required="true"/>     
-                
-                <p:outputLabel for="confirm_password" value="Confirm password: "/>
-                <p:password id="confirm_password" value="#{regBean.confirmPassword}" required="true"/> 
-            </h:panelGrid>
+                <h:panelGrid columns="2" cellpadding="5">                    
+                    <p:outputLabel for="login" value="Login: "/>
+                    <p:inputText id="login" value="#{regBean.username}" required="true"/> 
 
-            <p:commandButton id="submit" value="Sign up" action="#{regBean.register()}" update="@form"/> 
-     
-        </p:panel>             
+                    <p:outputLabel for="password" value="Password: "/>
+                    <p:password id="password" value="#{regBean.password}" required="true"/>     
+
+                    <p:outputLabel for="confirm_password" value="Confirm password: "/>
+                    <p:password id="confirm_password" value="#{regBean.confirmPassword}" required="true"/> 
+                </h:panelGrid>
+                   <br/>
+                <p:commandButton id="submit" value="Sign up" action="#{regBean.register()}" update="@form" style="width: 100%; background-color: white;"/> 
+
+            </p:panel>  
+        </div>
     </h:form>        
 </h:body>
 </html>

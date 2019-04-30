@@ -1,6 +1,7 @@
 package mksoft.sharemoments.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "PhotoPost")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PhotoPost.findAll", query = "SELECT p FROM PhotoPost p")
+    @NamedQuery(name = "PhotoPost.findAll", query = "SELECT p FROM PhotoPost p ORDER BY p.date DESC")
     , @NamedQuery(name = "PhotoPost.findById", query = "SELECT p FROM PhotoPost p WHERE p.id = :id")
     , @NamedQuery(name = "PhotoPost.findBySrc", query = "SELECT p FROM PhotoPost p WHERE p.src = :src")
     , @NamedQuery(name = "PhotoPost.findByUsername", query = "SELECT p FROM PhotoPost p WHERE p.username = :username")
@@ -48,6 +51,11 @@ public class PhotoPost implements Serializable {
     @JoinColumn(name = "username", referencedColumnName = "username")
     @ManyToOne(optional = false)
     private User username;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
 
     public PhotoPost() {
     }
@@ -91,6 +99,14 @@ public class PhotoPost implements Serializable {
 
     public void setUsername(User username) {
         this.username = username;
+    }
+    
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override

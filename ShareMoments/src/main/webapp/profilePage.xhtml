@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>#{profileViewBean.showUsername()}</title>
+        <h:outputStylesheet library="css" name="styles.css" />
+        <h:outputScript library='js' name='styleFuncs.js'/>
+    </h:head>
+    
+    <h:body>
+        
+        <h:form class='header'>
+            <p:growl id="msgs" showDetail="true" />
+            <p:menubar  class='header'>
+                <p:menuitem>
+                    <h:link outcome="authorization.xhtml?faces-redirect=true">
+                        <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
+                    </h:link>
+                </p:menuitem>
+                <p:menuitem value="           " disabled="true"/>
+                <p:menuitem value="All posts" url="allPosts.xhtml?faces-redirect=true"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Events" url="#"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Home" url="profilePage.xhtml?faces-redirect=true"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Settings" url="#" onclick="closeBioPanel(); return false;"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Quit" url="index?faces-redirect=true"/>
+                <f:facet name="options">
+                    <h:panelGrid id="countryTable" columns="2" cellpadding="0">                                  
+                        <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList()}">
+                            <p:ajax event="itemSelect" listener="#{searchBean.onItemSelect}" update="msgs" />
+                        </p:autoComplete>          
+                        <p:panel style="width: 30px !important; opacity: 0;"/>
+                    </h:panelGrid>
+                </f:facet>
+            </p:menubar>
+        </h:form>
+        
+        <p:panel id='bioPanel'>
+            <h:graphicImage
+                library="images"
+                name= "1.jpeg"
+                style="width:100px; height:100px; clip-path: circle(50%); float: left; margin-right: 20px;"     
+            />
+            <h:outputLabel value="Id: " style="color: grey;"/>
+            <h:outputLabel value="@#{profileViewBean.showUsername()}" /><br/>
+            <h:outputLabel value="Name: " style="color: grey;"/>
+            <h:outputLabel value="Mikhail Kitikov" /><br/>
+            <h:outputLabel value="Location: " style="color: grey;"/>
+            <h:outputLabel value="Belarus, Minsk" /><br/>
+            <h:outputLabel value="Bio: " style="color: grey;"/>
+            <h:outputLabel value=":) &lt;br /&gt; dsa" escape="false" /><br/>
+        </p:panel>
+
+        <center>
+            <p:lightBox styleClass="imagebox" id="lightbox1">  
+            <ui:repeat value="#{profileViewBean.currentUserPhotoPosts}" var="postItem" id='rep'>
+                <h:outputLink value='resources/images/#{postItem.src}' title="#{postItem.text}">
+                    <h:graphicImage
+                        library="images"
+                        name= "#{postItem.src}"
+                        style="width:150px; height:150px; position: absolute; #{profileViewBean.sz()}"     
+                        />
+                </h:outputLink>
+            </ui:repeat>
+        </p:lightBox>
+        </center>
+        
+        <p:panel class="footer" style="#{profileViewBean.footerTop()}">
+            <h:outputLabel value="ShareMoments" style="color: grey; font-size: 10pt;"/><br/>
+            <h:outputLabel value="(c) 2019"  style="color: grey; font-size: 10pt;"/><br/>
+        </p:panel>
+        
+    </h:body>
+</html>
+

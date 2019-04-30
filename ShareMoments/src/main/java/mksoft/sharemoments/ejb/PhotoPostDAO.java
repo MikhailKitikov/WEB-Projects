@@ -1,11 +1,5 @@
 package mksoft.sharemoments.ejb;
 
-/**
- *
- * @author mk99
- */
-import org.apache.commons.lang3.StringUtils;
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,6 +9,10 @@ import javax.faces.context.FacesContext;
 import mksoft.sharemoments.entity.PhotoPost;
 import mksoft.sharemoments.entity.User;
 
+/**
+ *
+ * @author mk99
+ */
 @Stateless
 public class PhotoPostDAO {
 
@@ -34,11 +32,15 @@ public class PhotoPostDAO {
 //        return true;
 //    }
 
-    public List<PhotoPost> getCurrentUserAllPosts(){
-        
+    public List<PhotoPost> getCurrentUserPhotoPosts(){        
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        String username = (String)facesContext.getExternalContext().getSessionMap().get("username");        
+        String username = (String)facesContext.getExternalContext().getSessionMap().get("currViewUser");        
         Query query = entityManager.createNamedQuery("PhotoPost.findByUsername").setParameter("username", new User(username));
+        return query.getResultList();
+    }
+    
+    public List<PhotoPost> getAllPhotoPosts(){              
+        Query query = entityManager.createNamedQuery("PhotoPost.findAll");
         return query.getResultList();
     }
 }
