@@ -48,8 +48,7 @@
                 <ui:repeat value="#{profileViewBean.allPhotoPosts}" var="postItem" id='rep'>
                         <h:outputLink value='resources/images/#{postItem.src}'>                            
                             <h:graphicImage
-                                library="images"
-                                name= "#{postItem.src}"
+                                value= "images/#{postItem.src}"
                                 style="width:150px; height:150px; position: absolute; #{profileViewBean.sz()}" 
                                 class="thumbnail"
                                 />

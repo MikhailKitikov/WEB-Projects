@@ -12,4 +12,6 @@
         <property name="alternatedocroot_1" value="from=/images/* dir=/tmp/" />
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/profiles" object-type="user" pool-name="mysql_profiles_guestPool"/>
+
+   
 </resources>
