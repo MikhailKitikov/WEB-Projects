@@ -1,4 +1,17 @@
+//function f() {
+//    alert(jQuery('#upload-form:hdnBtn').click());
+//    document.getElementById("imgimg").src="resources/images/logo.png"; //defineProperty("name", "logo.png");
+//    
+//}
 //
+//function afterLoad() {    
+//    alert(document.getElementById("upload-form:fileUpload").getAttribute("value"));
+//}
+
+
+//
+//
+////
 //
 ////function showImage(ID) {
 //    el = document.getElementById(ID);

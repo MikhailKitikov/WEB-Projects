@@ -6,6 +6,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>New post</title>
+        <h:outputStylesheet library="css" name="styles.css"/>
+        <h:outputScript library='js' name='styleFuncs.js'/>
     </h:head>
     
     <h:body>
@@ -37,16 +39,30 @@
                     </h:panelGrid>
                 </f:facet>
             </p:menubar>
-        </h:form>
+        </h:form>        
         
-        <h:form enctype="multipart/form-data">
-            <p:growl id="messages" showDetail="true" />
+        <h:form enctype="multipart/form-data" class="upload-form" id="upload-form">      
+            
+            <p:fileUpload 
+                id="fileUpload"
+                mode="advanced" 
 
-            <p:fileUpload value="#{fileUploadBean.file}" mode="simple"/>
-
-            <br /> <br />
-
-            <p:commandButton value="Submit" ajax="false" action="#{fileUploadBean.upload}" disabled="false" />
+                fileUploadListener="#{createPostBean.upload}" 
+                sizeLimit="1000000"
+                allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                previewWidth="0"
+                dragDropSupport="true"
+            />
+            <p:growl id="messages" showDetail="true" sticky="false" life="2000"/>  
+            
+<!--            <p:panel id="panpan">
+                <h:graphicImage
+                id="imgimg"
+                url=""
+                style="width:150px;height:150px;"
+                />
+            </p:panel>-->
+            
         </h:form>
         
     </h:body>

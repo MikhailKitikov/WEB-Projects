@@ -1,5 +1,10 @@
 package mksoft.sharemoments.ejb;
 
+import java.util.Date;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,6 +36,30 @@ public class PhotoPostDAO {
 //        entityManager.persist(user);
 //        return true;
 //    }
+   
+    public void createPost(String path) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        String username = (String)facesContext.getExternalContext().getSessionMap().get("currViewUser");
+        PhotoPost photoPost = new PhotoPost();
+        photoPost.setUsername(new User(username));
+        photoPost.setText("hello");
+        photoPost.setSrc(path);
+//        try {
+//            DateFormat formatter;
+//            formatter = new SimpleDateFormat("dd/MM/yyyy");
+//             // you can change format of date
+//            Date date = formatter.parse("2019-04-28 13:57:31.000");
+//            java.sql.Timestamp timeStampDate = new Timestamp(date.getTime());
+//            
+//            photoPost.setDate(date);
+//          } catch (ParseException e) {
+//            System.out.println("Exception :" + e);
+//            return ;
+//          }
+        photoPost.setDate(new Date(100, 1, 1, 1, 1, 1));
+        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" + photoPost.getDate());
+        entityManager.persist(photoPost);
+    }
 
     public List<PhotoPost> getCurrentUserPhotoPosts(){        
         FacesContext facesContext = FacesContext.getCurrentInstance();

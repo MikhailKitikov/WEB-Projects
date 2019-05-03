@@ -42,7 +42,7 @@ public class RegisterBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().put("username", username);
         context.getExternalContext().getSessionMap().put("currViewUser", username);
-        return "display?faces-redirect=true";
+        return "profilePage?faces-redirect=true";
     }
     
     public boolean validateInput() {
