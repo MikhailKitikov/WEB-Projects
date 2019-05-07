@@ -11,6 +11,8 @@
         <h:outputStylesheet library="css" name="styles.css" />
         <h:outputScript library='js' name='styleFuncs.js'/>
         <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet"/>
+        <h:outputScript library='js' name='gallery.js'/>
+        <h:outputScript library='js' name='funcs.js'/>
     </h:head>
     
     <h:body>
@@ -44,6 +46,8 @@
             </p:menubar>
         </h:form>
         
+        <p:panel style="position: relative; height: 40px; width: 100%;"/>
+        
         <p:panel id='bioPanel'>
             <h:graphicImage
                 library="images"
@@ -59,26 +63,40 @@
             <h:outputLabel value="Bio: " style="color: grey;"/>
             <h:outputLabel value=":) &lt;br /&gt; dsa" escape="false" /><br/>
         </p:panel>
-
+        
         <center>
-            <p:lightBox styleClass="imagebox" id="lightbox1">  
-            <ui:repeat value="#{profileViewBean.currentUserPhotoPosts}" var="postItem" id='rep'>
-                <h:outputLink value='resources/images/#{postItem.src}' title="#{postItem.text}">
-                    <h:graphicImage
-                        class="thumbnail"                        
-                        value= "images/#{postItem.src}"
-                        style="width:150px; height:150px; position: absolute; #{profileViewBean.sz()}"     
-                        />
-                    <div class="thumbnail-overlay" style="#{profileViewBean.shadowSz()}"/>
-                </h:outputLink>
-            </ui:repeat>
-        </p:lightBox>
+        <h:form>
+            <div styleClass="imagebox" id="photo-gallery">  
+                <h:panelGrid columns="3">
+                    <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">
+                        <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":dlg1ID" oncomplete="PF('dlg1').show()">
+                            <h:graphicImage
+                            class="thumbnail"                        
+                            value="images/#{postItem.src}"                           
+                            />
+                        </p:commandLink>
+                    </c:forEach>
+                </h:panelGrid>
+            </div>
+        </h:form>
         </center>
         
-        <p:panel class="footer" style="#{profileViewBean.footerTop()}">
-            <h:outputLabel value="ShareMoments" style="color: grey; font-size: 10pt;"/><br/>
-            <h:outputLabel value="(c) 2019"  style="color: grey; font-size: 10pt;"/><br/>
-        </p:panel>
+        <p:dialog id="dlg1ID" header="Basic Dialog" widgetVar="dlg1" minHeight="40" resizable="false">
+            <h:graphicImage id="changing-image" value="images/#{profileViewBean.currSrc}"/>
+            <h:form>
+                <p:commandButton value="next" action="#{profileViewBean.nextImage()}" update=":dlg1ID" oncomplete="PF('dlg1').show()"/>
+            </h:form>
+        </p:dialog>
+        
+        <div id="mask" onclick="hideWindow(); return false;" />
+        
+        <p:panel class="footer-left">
+            <h:outputLabel value="ShareMoments" style="color: grey; font-size: 8pt;"/><br/>
+        </p:panel>       
+        
+        <p:panel class="footer-right">
+            <h:outputLabel value="(c) 2019"  style="color: grey; font-size: 8pt;"/><br/>
+        </p:panel>      
         
     </h:body>
 </html>

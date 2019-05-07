@@ -1,4 +1,37 @@
-//var offsetX = 200, offsetY = 300;
+//window.onload = function() {
+//    var body = document.body,
+//    html = document.documentElement;
+//    document.getElementsByClassName("footer").style.bottom = Math.max( body.scrollHeight, body.offsetHeight, 
+//                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+//}
+
+//window.onscroll = function() {
+//    var body = document.body,
+//    html = document.documentElement;
+//    document.getElementsByClassName("footer").style.bottom = Math.max( body.scrollHeight, body.offsetHeight, 
+//                       html.clientHeight, html.scrollHeight, html.offsetHeight ).;
+//}
+
+//window.addEventListener('scroll', function() {
+//     var body = document.body,
+//    html = document.documentElement;
+//  document.getElementsByClassName("footer").style.bottom = Math.max( body.scrollHeight, body.offsetHeight, 
+//                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+//});
+
+//window.onresize = function() {
+//    var body = document.body,
+//    html = document.documentElement;
+//    document.getElementsByClassName("footer").style.bottom = Math.max( body.scrollHeight, body.offsetHeight, 
+//                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+//}
+
+
+
+//
+//
+//
+////var offsetX = 200, offsetY = 300;
 //var vert = 0, hor = 0;
 //
 //function sz() {

@@ -38,7 +38,7 @@ public class CreatePostBean implements Serializable{
     
     private String filename;
     private UploadedFile file;
-    private String destination = "/tmp/images/";
+    private final String destination = "/home/mk99/web/data/images/";
     
     @EJB
     private PhotoPostDAO photoPostDAO;
@@ -48,8 +48,8 @@ public class CreatePostBean implements Serializable{
         try {
             file = event.getFile();
             filename = file.getFileName();
-            copyFile(filename, event.getFile().getInputstream());
-            photoPostDAO.createPost("res.png");
+            copyFile("res1.jpeg", event.getFile().getInputstream());
+            photoPostDAO.createPost("res1.jpeg");
         } 
         catch (IOException e) {
             e.getMessage();
@@ -73,7 +73,7 @@ public class CreatePostBean implements Serializable{
     public boolean copyFile(String fileName, InputStream in) {
         
         try {
-            OutputStream out = new FileOutputStream(new File("/tmp/images/res.png")); 
+            OutputStream out = new FileOutputStream(new File(destination + fileName)); 
             int read = 0;
             byte[] bytes = new byte[1024];
  

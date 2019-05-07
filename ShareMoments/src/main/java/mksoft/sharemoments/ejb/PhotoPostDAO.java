@@ -23,19 +23,6 @@ public class PhotoPostDAO {
 
    @PersistenceContext(unitName = "profiles_persist")
     private EntityManager entityManager;
-
-//    public boolean createUser(String username, String password) {
-//        
-//        User user = entityManager.find(User.class, username);
-//        if(user != null){
-//            return false;
-//        }
-//        user = new User();
-//        user.setUsername(username);
-//        user.setPassword(password);
-//        entityManager.persist(user);
-//        return true;
-//    }
    
     public void createPost(String path) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
