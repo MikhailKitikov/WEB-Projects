@@ -116,4 +116,5 @@ public class CreatePostBean implements Serializable{
     public void setFile(UploadedFile file) {
         this.file = file;
     }
+    
 }

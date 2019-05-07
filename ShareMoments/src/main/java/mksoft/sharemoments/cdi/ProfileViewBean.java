@@ -3,14 +3,17 @@ package mksoft.sharemoments.cdi;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import mksoft.sharemoments.ejb.CommentDAO;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
 import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.entity.Comment;
 import mksoft.sharemoments.entity.PhotoPost;
 import static mksoft.sharemoments.entity.PhotoPost_.id;
 import org.primefaces.context.RequestContext;
@@ -45,31 +48,6 @@ public class ProfileViewBean implements Serializable {
         return "post" + id;
     }
     
-    int offsetX = 100, offsetY = 220;
-    int vert = 0, hor = 0;
-    int lastTop, lastLeft;
-    
-    public String sz() {
-        lastTop = offsetY + vert * 220;
-        lastLeft = offsetX + hor * 220;
-        String res = String.format("top: %dpx; left: %dpx;", lastTop, lastLeft);
-        if (++hor == 3) {
-            hor = 0;
-            ++vert;
-        }
-        return res;
-    }
-    
-    public String shadowSz() {
-        String res = String.format("top: %dpx; left: %dpx;", lastTop, lastLeft);
-        return res;
-    }
-    
-    public String footerTop() {
-        if (hor > 0) ++vert;
-        return String.format("top: %dpx;", offsetY + vert * 220);
-    }
-    
     private static String currSrc;
 
     public String getCurrSrc() {
@@ -93,20 +71,57 @@ public class ProfileViewBean implements Serializable {
     private List<PhotoPost> currentUserPhotoPosts;
     
     public List<PhotoPost> getCurrentUserPhotoPosts() {
-        vert = 0; hor = 0; offsetY = 220;
         currentUserPhotoPosts = photoPostDAO.getCurrentUserPhotoPosts();
         return currentUserPhotoPosts;
     }
     
     public List<PhotoPost> getAllPhotoPosts() {
-        vert = 0; hor = 0; offsetY = 100;
         return photoPostDAO.getAllPhotoPosts();
     }
+    
+    // ///// for comments
+    
+    @EJB
+    private CommentDAO commentDAO;
+    
+    private List<Comment> currentPostComments;
+    
+    public List<Comment> getCurrentPostComments() {
+        currentPostComments = commentDAO.getCurrentPostComments(currentUserPhotoPosts.get(currImageIndex).getId());
+        return currentPostComments;
+    }    
+    
+    private boolean renderComments = false;
+
+    public boolean isRenderComments() {
+        return renderComments;
+    }
+
+    public void setRenderComments(boolean renderComments) {
+        this.renderComments = renderComments;
+    }
+    
+    private String text;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+    
+    public void createComment() {
+        String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser");
+        Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();
+        commentDAO.createComment(author, postID, text);
+    }    
     
     //
     
     public void setCurrentImage(Integer id) {
         
+        renderComments = true;
         currImageIndex = -1;
         for (int i = 0; i < currentUserPhotoPosts.size(); ++i) {
             if (currentUserPhotoPosts.get(i).getId().intValue() == id.intValue()) {
@@ -122,6 +137,17 @@ public class ProfileViewBean implements Serializable {
         currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
     }
     
-    public ProfileViewBean() {}
+    public void prevImage() {
+        --currImageIndex;
+        currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
+    }
+    
+    public String nextImageAvailable() {
+        return (currImageIndex >= currentUserPhotoPosts.size() ? "display: none;" : "display: block;");
+    }
+    
+    public String prevImageAvailable() {
+        return (currImageIndex < 0 ? "display: none;" : "display: block;");
+    }
     
 }
