@@ -81,8 +81,8 @@
 
 #smallWindow {
     position: fixed;
-    height: 300px;
-    width: 600px;
+    height: 400px;
+    width: 800px;
     left: 0; right: 0; margin-left: auto; margin-right: auto;
     top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
     border: 0;
@@ -98,9 +98,26 @@
 }
 
 #changing-image {
-    width: 300px;
-    height: 300px;
+    width: 500px;
+    height: 400px;
 }
+
+#smallWindow .ui-panelgrid-cell {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+/*.post-view-left-panel {
+    background-color: blue; 
+    position: relative;
+    height: 300px;
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    left: 0; right: 0; margin-left: auto; margin-right: auto;
+    top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
+}*/
 
 a:link, a:visited, a:hover, a:active {
     text-decoration: none;
@@ -212,13 +229,24 @@ td {
 .ui-panelgrid .ui-panelgrid-cell  {
     padding: 0;
     background-color: green;
+    margin: 0;
+    border: 0;
 }
 
-/*#navigate-image-form #next-button {
-    position: absolute;
-    right: 0;
-    top: 50%;
-}*/
+.ui-widget-content {
+    border: 0;
+}
+
+#navigate-image-form #next-button {
+    position: relative;
+    border: 0;
+}
+
+#navigate-image-form #prev-button {
+    position: relative;
+    border: 0;
+}
+
 
             /*fileupload*/
 

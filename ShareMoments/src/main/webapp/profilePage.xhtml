@@ -81,20 +81,22 @@
         </h:form>
         </center>
         
-        <p:panelGrid columns="2" id="smallWindow" style="padding: 0;" >
-            <p:panel style="position: relative; background-color: blue; height: 100%;">
-                <h:graphicImage style="height: 100%;" id="changing-image" value="images/#{profileViewBean.currSrc}"/>
-                <h:form id="navigate-image-form" >
-                    <p:commandButton id="next-button" style="#{profileViewBean.nextImageAvailable()}" value="next" action="#{profileViewBean.nextImage()}" update=":smallWindow" oncomplete="showWindow();"/>
-                    <p:commandButton id="prev-button" style="#{profileViewBean.prevImageAvailable()}" value="prev" action="#{profileViewBean.prevImage()}" update=":smallWindow" oncomplete="showWindow();"/>
+        <p:panelGrid columns="2" id="smallWindow" style="padding: 0; border: 0;" >
+            <h:panelGroup id="image-pg">
+                <h:graphicImage id="changing-image" value="images/#{profileViewBean.currSrc}"/>
+                <h:form id="navigate-image-form" style="border: 0;">
+                    <p:panelGrid columns="2" id="dgFSGS" style="padding: 0; margin-left: auto; margin-right: auto; border: 0;" >
+                        <p:commandButton id="prev-button" style="#{profileViewBean.prevImageAvailable()}" value="prev" action="#{profileViewBean.prevImage()}" update=":smallWindow" oncomplete="showWindow();"/>
+                        <p:commandButton id="next-button" style="#{profileViewBean.nextImageAvailable()}" value="next" action="#{profileViewBean.nextImage()}" update=":smallWindow" oncomplete="showWindow();"/>
+                    </p:panelGrid>
                 </h:form>
-            </p:panel>
-            <p:panel id="commentsPanelID" style="background-color: red; height: 100%; width: 100%; position: relative;">
+            </h:panelGroup>
+            <p:panel id="commentsPanelID" style="background-color: red; height: 400px; width: 300px; margin: 0; padding: 0;">
                 <h:form id="commentsFormID">
                     <h:panelGroup id="tablePG">
                         <p:dataTable rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="150">
                             <p:column>
-                                <h:outputText value="#{comment.text}"/>
+                                <h:outputText value="#{comment.authorName}:#{comment.text}"/>
                             </p:column>
                         </p:dataTable>
                     </h:panelGroup>

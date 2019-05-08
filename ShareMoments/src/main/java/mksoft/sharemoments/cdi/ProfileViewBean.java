@@ -93,6 +93,7 @@ public class ProfileViewBean implements Serializable {
     private static List<Comment> currentPostComments;
     
     public List<Comment> getCurrentPostComments() {
+        if (currImageIndex < 0) return null;
         currentPostComments = commentDAO.getCurrentPostComments(currentUserPhotoPosts.get(currImageIndex).getId());
         return currentPostComments;
     }    
@@ -120,7 +121,7 @@ public class ProfileViewBean implements Serializable {
     public void createComment() {
         
         try {
-            String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser");
+            String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
             Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();
             commentDAO.createComment(author, postID, text);
             List<Comment> f = getCurrentPostComments();
