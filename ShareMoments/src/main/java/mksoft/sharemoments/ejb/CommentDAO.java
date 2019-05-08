@@ -26,7 +26,7 @@ public class CommentDAO {
     private EntityManager entityManager;
    
     public void createComment(String from, Integer targPost, String text) {
-        Comment comment = new Comment();
+        Comment comment = new Comment(100);
         comment.setPostID(new PhotoPost(targPost));
         comment.setAuthorName(from);
         comment.setText(text);

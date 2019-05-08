@@ -91,13 +91,15 @@
             </p:panel>
             <p:panel id="commentsPanelID" style="background-color: red; height: 100%; width: 100%; position: relative;">
                 <h:form id="commentsFormID">
-                    <p:dataTable rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="150">
-                        <p:column>
-                            <h:outputText value="#{comment.text}"/>
-                        </p:column>
-                    </p:dataTable>
+                    <h:panelGroup id="tablePG">
+                        <p:dataTable rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="150">
+                            <p:column>
+                                <h:outputText value="#{comment.text}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
                     <p:inputText value="#{profileViewBean.text}"/>
-                    <p:commandButton value="comment" action="#{profileViewBean.createComment()}" update=":commentsFormID:commentDataTableID"/>
+                    <p:commandButton value="comment" action="#{profileViewBean.createComment()}" update=":commentsFormID:commentDataTableID" oncomplete="showWindow();"/>
                 </h:form>
             </p:panel>                
         </p:panelGrid>
@@ -110,4 +112,3 @@
         
     </h:body>
 </html>
-

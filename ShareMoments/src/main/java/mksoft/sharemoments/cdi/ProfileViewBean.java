@@ -1,21 +1,27 @@
 package mksoft.sharemoments.cdi;
 
+import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import mksoft.sharemoments.ejb.CommentDAO;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
 import mksoft.sharemoments.ejb.UserDAO;
 import mksoft.sharemoments.entity.Comment;
 import mksoft.sharemoments.entity.PhotoPost;
 import static mksoft.sharemoments.entity.PhotoPost_.id;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -84,21 +90,21 @@ public class ProfileViewBean implements Serializable {
     @EJB
     private CommentDAO commentDAO;
     
-    private List<Comment> currentPostComments;
+    private static List<Comment> currentPostComments;
     
     public List<Comment> getCurrentPostComments() {
         currentPostComments = commentDAO.getCurrentPostComments(currentUserPhotoPosts.get(currImageIndex).getId());
         return currentPostComments;
     }    
     
-    private boolean renderComments = false;
+    private static boolean renderComments = false;
 
     public boolean isRenderComments() {
         return renderComments;
     }
 
     public void setRenderComments(boolean renderComments) {
-        this.renderComments = renderComments;
+        ProfileViewBean.renderComments = renderComments;
     }
     
     private String text;
@@ -112,9 +118,28 @@ public class ProfileViewBean implements Serializable {
     }
     
     public void createComment() {
-        String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser");
-        Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();
-        commentDAO.createComment(author, postID, text);
+        
+        try {
+            String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser");
+            Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();
+            commentDAO.createComment(author, postID, text);
+            List<Comment> f = getCurrentPostComments();
+            RequestContext.getCurrentInstance().update("commentsFormID:tablePG");
+        }
+        catch (EJBException e) {
+            @SuppressWarnings("ThrowableResultIgnored")
+            Exception cause = e.getCausedByException();
+            if (cause instanceof ConstraintViolationException) {
+                @SuppressWarnings("ThrowableResultIgnored")
+                ConstraintViolationException cve = (ConstraintViolationException) e.getCausedByException();
+                for (Iterator<ConstraintViolation<?>> it = cve.getConstraintViolations().iterator(); it.hasNext();) {
+                    ConstraintViolation<? extends Object> v = it.next();
+                    System.err.println(v);
+                    System.err.println("==>>"+v.getMessage());
+                }
+            }
+            Assert.fail("ejb exception");
+        }       
     }    
     
     //
@@ -143,11 +168,11 @@ public class ProfileViewBean implements Serializable {
     }
     
     public String nextImageAvailable() {
-        return (currImageIndex >= currentUserPhotoPosts.size() ? "display: none;" : "display: block;");
+        return (currImageIndex == currentUserPhotoPosts.size() - 1 ? "display: none;" : "display: block;");
     }
     
     public String prevImageAvailable() {
-        return (currImageIndex < 0 ? "display: none;" : "display: block;");
+        return (currImageIndex == 0 ? "display: none;" : "display: block;");
     }
     
 }

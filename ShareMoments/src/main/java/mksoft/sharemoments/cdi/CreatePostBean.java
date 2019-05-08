@@ -50,24 +50,25 @@ public class CreatePostBean implements Serializable{
             filename = file.getFileName();
             copyFile("res1.jpeg", event.getFile().getInputstream());
             photoPostDAO.createPost("res1.jpeg");
+            int a = 100;
         } 
         catch (IOException e) {
             e.getMessage();
         }
         catch (EJBException e) {
-        @SuppressWarnings("ThrowableResultIgnored")
-        Exception cause = e.getCausedByException();
-        if (cause instanceof ConstraintViolationException) {
             @SuppressWarnings("ThrowableResultIgnored")
-            ConstraintViolationException cve = (ConstraintViolationException) e.getCausedByException();
-            for (Iterator<ConstraintViolation<?>> it = cve.getConstraintViolations().iterator(); it.hasNext();) {
-                ConstraintViolation<? extends Object> v = it.next();
-                System.err.println(v);
-                System.err.println("==>>"+v.getMessage());
+            Exception cause = e.getCausedByException();
+            if (cause instanceof ConstraintViolationException) {
+                @SuppressWarnings("ThrowableResultIgnored")
+                ConstraintViolationException cve = (ConstraintViolationException) e.getCausedByException();
+                for (Iterator<ConstraintViolation<?>> it = cve.getConstraintViolations().iterator(); it.hasNext();) {
+                    ConstraintViolation<? extends Object> v = it.next();
+                    System.err.println(v);
+                    System.err.println("==>>"+v.getMessage());
+                }
             }
+            Assert.fail("ejb exception");
         }
-        Assert.fail("ejb exception");
-    }
     }
  
     public boolean copyFile(String fileName, InputStream in) {
