@@ -96,7 +96,11 @@ public class ProfileViewBean implements Serializable {
         if (currImageIndex < 0) return null;
         currentPostComments = commentDAO.getCurrentPostComments(currentUserPhotoPosts.get(currImageIndex).getId());
         return currentPostComments;
-    }    
+    }
+
+    public String currentPostText() {
+        return currentUserPhotoPosts.get(currImageIndex).getText();
+    }
     
     private static boolean renderComments = false;
 

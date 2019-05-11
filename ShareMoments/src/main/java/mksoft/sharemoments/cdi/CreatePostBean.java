@@ -6,27 +6,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-import org.apache.commons.io.FilenameUtils;
-import org.eclipse.persistence.jpa.jpql.Assert;
 
 /**
  *
@@ -34,11 +27,13 @@ import org.eclipse.persistence.jpa.jpql.Assert;
  */
 @ManagedBean(name = "createPostBean", eager = true)
 @ViewScoped
-public class CreatePostBean implements Serializable{
+public class CreatePostBean implements Serializable {
     
-    private String filename;
+    private String filename, tempFilename;
     private UploadedFile file;
-    private final String destination = "/home/mk99/web/data/images/";
+    private final String destination = "/home/mk99/web/data/images/",
+            tempDestination = "/home/mk99/web/data/images/temp/";
+    private String postDescription;
     
     @EJB
     private PhotoPostDAO photoPostDAO;
@@ -47,11 +42,24 @@ public class CreatePostBean implements Serializable{
         
         try {
             file = event.getFile();
-            filename = file.getFileName();
-            copyFile("res1.jpeg", event.getFile().getInputstream());
-            photoPostDAO.createPost("res1.jpeg");
-            int a = 100;
-        } 
+            tempFilename = file.getFileName();
+            System.out.println("temp filename: " + tempFilename);
+            copyFile(tempDestination + tempFilename, file.getInputstream());
+        }
+        catch (IOException e) {
+            e.getMessage();
+        }
+    }
+    
+    public void submit() {     
+        
+        try {
+            String username = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+            filename = username + "_" + String.valueOf(new Date().getTime()) + tempFilename.substring(tempFilename.lastIndexOf('.'));
+            System.out.println("filename: " + filename);
+            copyFile(destination + filename, file.getInputstream());
+            photoPostDAO.createPost(filename, postDescription);
+        }
         catch (IOException e) {
             e.getMessage();
         }
@@ -71,22 +79,18 @@ public class CreatePostBean implements Serializable{
         }
     }
  
-    public boolean copyFile(String fileName, InputStream in) {
+    public boolean copyFile(String path, InputStream in) {
         
         try {
-            OutputStream out = new FileOutputStream(new File(destination + fileName)); 
+            OutputStream out = new FileOutputStream(new File(path)); 
             int read = 0;
-            byte[] bytes = new byte[1024];
- 
+            byte[] bytes = new byte[1024]; 
             while ((read = in.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
-            }
- 
+            } 
             in.close();
             out.flush();
             out.close();
-            
-            FacesContext.getCurrentInstance().addMessage("Completed", new FacesMessage(null, "PhotoPost created!"));
             return true;
         } 
         catch (IOException e) {
@@ -94,11 +98,6 @@ public class CreatePostBean implements Serializable{
             return false;
         }
     }
-    
-//    public String src() {
-//        if (filename == null) return "resources/images/logo.png";
-//        return destination + "res.png";
-//    }
     
     //
     
@@ -110,12 +109,28 @@ public class CreatePostBean implements Serializable{
         this.filename = filename;
     }   
 
+    public String getTempFilename() {
+        return tempFilename;
+    }
+
+    public void setTempFilename(String tempFilename) {
+        this.tempFilename = tempFilename;
+    }
+    
     public UploadedFile getFile() {
         return file;
     }
 
     public void setFile(UploadedFile file) {
         this.file = file;
+    }
+
+    public String getPostDescription() {
+        return postDescription;
+    }
+
+    public void setPostDescription(String postDescription) {
+        this.postDescription = postDescription;
     }
     
 }

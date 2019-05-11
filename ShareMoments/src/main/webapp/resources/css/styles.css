@@ -89,8 +89,8 @@
     background: whitesmoke;   
     z-index: 3000;
     display: none;
-    transition: 2s;
-    transform: scale(1.2, 1.2);
+/*    transition: 2s;
+    transform: scale(1.2, 1.2);*/
 }
 
 #smallWindow_content {
@@ -124,7 +124,7 @@ a:link, a:visited, a:hover, a:active {
     color: navy;
 }
 
-#mask {
+.mask {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -228,7 +228,6 @@ td {
 
 .ui-panelgrid .ui-panelgrid-cell  {
     padding: 0;
-    background-color: green;
     margin: 0;
     border: 0;
 }
@@ -247,24 +246,19 @@ td {
     border: 0;
 }
 
-
-            /*fileupload*/
-
-/*.ui-fileupload-content {
-    border: 0;
-    background-color: red;
+#commentsPanelID_content {
+    padding: 0;
 }
 
-.ui-fileupload .ui-widget {
-    border: 0;
-    background-color: red;
+.ui-datatable tbody td {
+    background-color: white;
+    border-color: white;
 }
 
-.ui-fileupload-buttonbar {
-    background-color: red;
-    border: none;
+.word-wrap-text {
+    word-wrap: break-word;
+    display: block;
+    width: 200px; /* Optional, depends otherwise on parent. */
+    height: 50px;
+    overflow: auto;
 }
-
-.fileupload-content {
-    display: none;
-}*/

@@ -24,38 +24,28 @@ public class PhotoPostDAO {
    @PersistenceContext(unitName = "profiles_persist")
     private EntityManager entityManager;
    
-    public void createPost(String path) {
+    public void createPost(String path, String postDescription) {
+        
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        String username = (String)facesContext.getExternalContext().getSessionMap().get("currViewUser");
+        String username = (String)facesContext.getExternalContext().getSessionMap().get("username");
         PhotoPost photoPost = new PhotoPost();
         photoPost.setUsername(new User(username));
-        photoPost.setText("hello");
+        photoPost.setText(postDescription);
         photoPost.setSrc(path);
-//        try {
-//            DateFormat formatter;
-//            formatter = new SimpleDateFormat("dd/MM/yyyy");
-//             // you can change format of date
-//            Date date = formatter.parse("2019-04-28 13:57:31.000");
-//            java.sql.Timestamp timeStampDate = new Timestamp(date.getTime());
-//            
-//            photoPost.setDate(date);
-//          } catch (ParseException e) {
-//            System.out.println("Exception :" + e);
-//            return ;
-//          }
-        photoPost.setDate(new Date(100, 1, 1, 1, 1, 1));
-        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" + photoPost.getDate());
+        photoPost.setDate(new Timestamp(new Date().getTime()));
         entityManager.persist(photoPost);
     }
 
-    public List<PhotoPost> getCurrentUserPhotoPosts(){        
+    public List<PhotoPost> getCurrentUserPhotoPosts() {    
+        
         FacesContext facesContext = FacesContext.getCurrentInstance();
         String username = (String)facesContext.getExternalContext().getSessionMap().get("currViewUser");        
         Query query = entityManager.createNamedQuery("PhotoPost.findByUsername").setParameter("username", new User(username));
         return query.getResultList();
     }
     
-    public List<PhotoPost> getAllPhotoPosts(){              
+    public List<PhotoPost> getAllPhotoPosts() {    
+        
         Query query = entityManager.createNamedQuery("PhotoPost.findAll");
         return query.getResultList();
     }

@@ -9,6 +9,7 @@
     <h:head>
         <title>#{profileViewBean.showUsername()}</title>
         <h:outputStylesheet library="css" name="styles.css" />
+        <h:outputStylesheet library="css" name="uploadStyle.css" />
         <h:outputScript library='js' name='styleFuncs.js'/>
         <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet"/>
         <h:outputScript library='js' name='gallery.js'/>
@@ -32,7 +33,7 @@
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Home" url="profilePage.xhtml?faces-redirect=true"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="+" url="createPost.xhtml?faces-redirect=true"/>
+                <p:menuitem value="+" onclick="showWindow('create-post-window');"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Quit" url="index?faces-redirect=true"/>
                 <f:facet name='options'>
@@ -64,12 +65,12 @@
             <h:outputLabel value=":) &lt;br /&gt; dsa" escape="false" /><br/>
         </p:panel>
         
-        <center>
-        <h:form>
-            <div styleClass="imagebox" id="photo-gallery">  
+        <center>        
+            <h:panelGroup styleClass="imagebox" id="photo-gallery">  
+                <h:form>
                 <h:panelGrid columns="3">
                     <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">
-                        <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow();">
+                        <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow('smallWindow');">
                             <h:graphicImage
                             class="thumbnail"                        
                             value="images/#{postItem.src}"                           
@@ -77,40 +78,83 @@
                         </p:commandLink>
                     </c:forEach>
                 </h:panelGrid>
-            </div>
-        </h:form>
+                </h:form>
+            </h:panelGroup>        
         </center>
         
         <p:panelGrid columns="2" id="smallWindow" style="padding: 0; border: 0;" >
             <h:panelGroup id="image-pg">
                 <h:graphicImage id="changing-image" value="images/#{profileViewBean.currSrc}"/>
-                <h:form id="navigate-image-form" style="border: 0;">
-                    <p:panelGrid columns="2" id="dgFSGS" style="padding: 0; margin-left: auto; margin-right: auto; border: 0;" >
-                        <p:commandButton id="prev-button" style="#{profileViewBean.prevImageAvailable()}" value="prev" action="#{profileViewBean.prevImage()}" update=":smallWindow" oncomplete="showWindow();"/>
-                        <p:commandButton id="next-button" style="#{profileViewBean.nextImageAvailable()}" value="next" action="#{profileViewBean.nextImage()}" update=":smallWindow" oncomplete="showWindow();"/>
+                <h:form id="navigate-image-form" style="border: 0; position: fixed; ">
+                    <p:panelGrid columns="2" id="dgFSGS" style="padding: 0; margin-left: auto; margin-right: auto; border: 0; top: 0; bottom: 0; margin-bottom: auto; margin-top: auto;" >
+                        <p:commandButton id="prev-button" style="#{profileViewBean.prevImageAvailable()}" value="prev" action="#{profileViewBean.prevImage()}" update=":smallWindow" oncomplete="showWindow('smallWindow');"/>
+                        <p:commandButton id="next-button" style="#{profileViewBean.nextImageAvailable()}" value="next" action="#{profileViewBean.nextImage()}" update=":smallWindow" oncomplete="showWindow('smallWindow');"/>
                     </p:panelGrid>
                 </h:form>
             </h:panelGroup>
-            <p:panel id="commentsPanelID" style="background-color: red; height: 400px; width: 300px; margin: 0; padding: 0;">
-                <h:form id="commentsFormID">
-                    <h:panelGroup id="tablePG">
-                        <p:dataTable rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="150">
+            <p:panel id="commentsPanelID" style="height: 400px; width: 300px; margin: 0; padding: 0; padding-left: 10px;">
+                <h:form id="commentsFormID" style="height: 200px !important;">
+                    <p:panel style="height: 50px; max-width: 200px; margin: 0; padding: 0; margin-bottom: 20px;">
+                        <h:outputText style="max-height: 50px !important; max-width: 200px; font: 10pt grey;" styleClass="word-wrap-text" rendered="#{profileViewBean.renderComments}" value="#{profileViewBean.currentPostText()}"/>
+                    </p:panel>
+                    <h:panelGroup id="tablePG" style="height: 180px;">
+                        <p:dataTable rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="250">
                             <p:column>
-                                <h:outputText value="#{comment.authorName}:#{comment.text}"/>
+                                <h:outputText style='font: 10pt grey;' value="#{comment.authorName}: "/>
+                                <h:outputText value="#{comment.text}"/>
                             </p:column>
                         </p:dataTable>
                     </h:panelGroup>
-                    <p:inputText value="#{profileViewBean.text}"/>
-                    <p:commandButton value="comment" action="#{profileViewBean.createComment()}" update=":commentsFormID:commentDataTableID" oncomplete="showWindow();"/>
+                    <p:panelGrid columns="2" style="position: fixed; height: 50px; padding: 0; margin: 10px; margin-right: 10px;">
+                        <p:inputText value="#{profileViewBean.text}"/>
+                        <p:commandButton style="background-color: white; border: 0; font-size: 10pt;" value="add" action="#{profileViewBean.createComment()}" update=":commentsFormID:commentDataTableID" oncomplete="showWindow('smallWindow');"/>
+                    </p:panelGrid>
                 </h:form>
             </p:panel>                
         </p:panelGrid>
         
-        <div id="mask" onclick="hideWindow(); return false;" />
+        <div id="smallWindow-mask" class="mask" onclick="hideWindow('smallWindow'); return false;" />
+        <div id="create-post-window-mask" class="mask" onclick="hideWindow('create-post-window'); changeUploadState(0); return false;" />
 
         <p:panel class="footer">
             <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>
         </p:panel> 
+        
+        
+        <p:panel id="create-post-window">
+            <center>
+                <h:form enctype="multipart/form-data" class="upload-form" id="upload-form">   
+                    <p:fileUpload
+                        id="fileUpload"
+                        mode="advanced"
+                        fileUploadListener="#{createPostBean.upload}"
+                        sizeLimit="1000000"
+                        allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                        previewWidth="0"
+                        dragDropSupport="true"
+                        update=":panpan"
+                        oncomplete="changeUploadState(1); return false;"
+                    />    
+                </h:form>
+            </center>
+            
+            <p:panel id='panpan'>
+                <center>
+                    <h:form id='crop-form' style="width: 100%; height: 100%; border: 0;">
+                        <p:panelGrid columns="1">
+                            <p:graphicImage url="images/#{createPostBean.tempFilename}" style="width: 300px; height: 200px;"/>
+                            <h:outputLabel value="Post description"/>
+                            <p:inputTextarea id="post-text-input" value="#{createPostBean.postDescription}"/>                        
+                        </p:panelGrid>
+                        <p:panelGrid columns="2">
+                            <p:commandButton value="Create" action="#{createPostBean.submit()}" update=":photo-gallery" oncomplete="hideWindow('create-post-window'); changeUploadState(0);"/>
+                            <p:commandButton value="Cancel" onclick="changeUploadState(0); hideWindow('create-post-window'); return false;"/>
+                        </p:panelGrid>                        
+                    </h:form>
+                </center>
+            </p:panel>  
+            
+        </p:panel>
         
     </h:body>
 </html>

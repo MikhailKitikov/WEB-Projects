@@ -1,18 +1,22 @@
-function showWindow() {
-    document.getElementById('smallWindow').style.display='block';
-    document.getElementById('mask').style.display='block';
+function showWindow(wnd_id) {
+    document.getElementById(wnd_id).style.display='block';
+    document.getElementById(wnd_id + '-mask').style.display='block';
     return false;
 }
 
-function hideWindow() {
-    document.getElementById('smallWindow').style.display='none'; 
-    document.getElementById('mask').style.display='none';
+function hideWindow(wnd_id) {
+    document.getElementById(wnd_id).style.display='none'; 
+    document.getElementById(wnd_id + '-mask').style.display='none';
     return false;
 }
-//
-//$(".thumbnail").hover(
-//  function(){
-//  		$(".info", this).css("display", "block");
-//	}, function(){
-//  		$(".info", this).css("display", "none");
-//});
+
+function changeUploadState(state) {
+    if (state === 1) {
+        document.getElementById('upload-form:fileUpload').style.display='none';
+        document.getElementById('panpan').style.display='block';
+    }
+    else {
+        document.getElementById('upload-form:fileUpload').style.display='block';
+        document.getElementById('panpan').style.display='none';
+    }
+}

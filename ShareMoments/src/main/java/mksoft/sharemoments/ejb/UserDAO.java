@@ -1,5 +1,6 @@
 package mksoft.sharemoments.ejb;
 
+import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -56,28 +57,9 @@ public class UserDAO {
         return query.getResultList();
     }
     
-//    public List<User> searchUser(String name) {
-//        
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        
-//        CriteriaQuery<User> query = cb.createQuery(User.class);
-//        //From clause
-//        Root<User> personRoot = query.from(User.class);
-//
-//        //Where clause
-//        query.where(
-//            //Like predicate
-//            cb.like(
-//                //assuming 'lastName' is the property on the Person Java object that is mapped to the last_name column on the Person table.
-//                personRoot.<String>get("username"),
-//                //Add a named parameter called likeCondition
-//                cb.parameter(String.class, "likeCondition")));
-//
-//        TypedQuery<User> tq = entityManager.createQuery(query);
-//        String pattern = "%" + name + "%";
-//        tq.setParameter("likeCondition", pattern);
-//        List<User> people = tq.getResultList();
-//        return people;
-//    }
+    public List<String> searchUser(String name) {        
+        Query query = entityManager.createNamedQuery("User.findLike").setParameter("name", "'%" + name + "%'");
+        return query.getResultList();
+    }
 }
     

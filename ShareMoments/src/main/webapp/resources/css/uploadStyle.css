@@ -1,0 +1,47 @@
+            /*fileupload*/
+
+/*.ui-fileupload-content {
+    border: 0;
+    background-color: red;
+}
+
+.ui-fileupload .ui-widget {
+    border: 0;
+    background-color: red;
+}
+
+.ui-fileupload-buttonbar {
+    background-color: red;
+    border: none;
+}
+
+.fileupload-content {
+    display: none;
+}*/
+
+#create-post-window {
+    position: fixed;
+    height: 400px;
+    width: 800px;
+    left: 0; right: 0; margin-left: auto; margin-right: auto;
+    top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
+    border: 0; 
+    z-index: 3000;
+    display: none;
+    padding: 0; 
+    background-color: white;
+/*    transition: 2s;
+    transform: scale(1.2, 1.2);*/
+}
+
+#panpan {
+    display: none;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+    border: 0 !important;
+}
+
+.ui-widget-header {
+    border: 0 !important;
+}

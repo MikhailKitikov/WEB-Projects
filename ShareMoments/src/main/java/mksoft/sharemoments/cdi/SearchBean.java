@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mksoft.sharemoments.cdi;
 
 import java.io.IOException;
@@ -42,7 +37,8 @@ public class SearchBean implements Serializable {
  
     public List<String> userList() {         
         List<String> resList = userDAO.getAllUsernames();
-        resList.remove("admin");
+        if (resList.contains("admin")) 
+            resList.remove("admin");
         Collections.sort(resList);
         return resList;  
     }
@@ -52,6 +48,10 @@ public class SearchBean implements Serializable {
         context.getExternalContext().getSessionMap().put("currViewUser", username);
         FacesContext.getCurrentInstance().getExternalContext().redirect("profilePage.xhtml");
     }
+    
+//    public void onItemChange(SelectEvent event) throws IOException {
+//        userList();
+//    }
 
     public SearchBean() {
     }
