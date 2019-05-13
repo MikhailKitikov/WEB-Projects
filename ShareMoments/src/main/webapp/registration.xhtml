@@ -29,6 +29,18 @@
 
                     <p:outputLabel for="confirm_password" value="Confirm password: "/>
                     <p:password id="confirm_password" value="#{regBean.confirmPassword}" required="true"/> 
+                    
+                    <p:outputLabel for="name" value="Name: "/>
+                    <p:inputText id="name" value="#{regBean.name}" required="true"/> 
+                    
+                    <p:outputLabel for="location" value="Location: "/>
+                    <p:selectOneMenu id="location" value="#{regBean.location}" style="width:150px">
+                        <f:selectItem itemLabel="Select location" itemValue="" noSelectionOption="false" />
+                        <f:selectItems value="#{regBean.locations}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel for="bio" value="Bio: "/>
+                    <p:inputText id="bio" value="#{regBean.bio}" required="true"/>  
                 </h:panelGrid>
                    <br/>
                 <p:commandButton id="submit" value="Sign up" action="#{regBean.register()}" update="@form" style="width: 100%; background-color: white;"/> 

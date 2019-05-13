@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import mksoft.sharemoments.entity.User;
+import mksoft.sharemoments.entity.UserData;
 
 @Stateless
 public class UserDAO {
@@ -34,7 +35,7 @@ public class UserDAO {
         return 0;
     }
 
-    public boolean createUser(String username, String password) {
+    public boolean createUser(String username, String password, String name, String location, String bio) {
         
         User user = entityManager.find(User.class, username);
         if(user != null){
@@ -44,6 +45,13 @@ public class UserDAO {
         user.setUsername(username);
         user.setPassword(password);
         entityManager.persist(user);
+        
+        UserData userData = new UserData(username);
+        userData.setName(name);
+        userData.setLocation(location);
+        userData.setBio(bio);
+        entityManager.persist(userData);
+        
         return true;
     }
 
@@ -60,6 +68,10 @@ public class UserDAO {
     public List<String> searchUser(String name) {        
         Query query = entityManager.createNamedQuery("User.findLike").setParameter("name", "'%" + name + "%'");
         return query.getResultList();
+    }
+    
+    public User userObject(String username) {
+        return entityManager.find(User.class, username);       
     }
 }
     

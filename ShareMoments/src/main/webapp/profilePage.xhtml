@@ -53,16 +53,16 @@
             <h:graphicImage
                 library="images"
                 name= "1.jpeg"
-                style="width:100px; height:100px; clip-path: circle(50%); float: left; margin-right: 20px;"     
+                style="width:100px; height:100px; -webkit-clip-path: circle(50%); float: left; margin-right: 20px;"     
             />
             <h:outputLabel value="Id: " style="color: grey;"/>
             <h:outputLabel value="@#{profileViewBean.showUsername()}" /><br/>
             <h:outputLabel value="Name: " style="color: grey;"/>
-            <h:outputLabel value="Mikhail Kitikov" /><br/>
+            <h:outputLabel value="#{profileViewBean.showName()}" /><br/>
             <h:outputLabel value="Location: " style="color: grey;"/>
-            <h:outputLabel value="Belarus, Minsk" /><br/>
+            <h:outputLabel value="#{profileViewBean.showLocation()}" /><br/>
             <h:outputLabel value="Bio: " style="color: grey;"/>
-            <h:outputLabel value=":) &lt;br /&gt; dsa" escape="false" /><br/>
+            <h:outputLabel value="#{profileViewBean.showBio()}" escape="false" /><br/>
         </p:panel>
         
         <center>        

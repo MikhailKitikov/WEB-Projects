@@ -26,10 +26,8 @@ public class PhotoPostDAO {
    
     public void createPost(String path, String postDescription) {
         
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        String username = (String)facesContext.getExternalContext().getSessionMap().get("username");
         PhotoPost photoPost = new PhotoPost();
-        photoPost.setUsername(new User(username));
+        photoPost.setUsername((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username"));
         photoPost.setText(postDescription);
         photoPost.setSrc(path);
         photoPost.setDate(new Timestamp(new Date().getTime()));
@@ -38,9 +36,8 @@ public class PhotoPostDAO {
 
     public List<PhotoPost> getCurrentUserPhotoPosts() {    
         
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        String username = (String)facesContext.getExternalContext().getSessionMap().get("currViewUser");        
-        Query query = entityManager.createNamedQuery("PhotoPost.findByUsername").setParameter("username", new User(username));
+        FacesContext facesContext = FacesContext.getCurrentInstance();   
+        Query query = entityManager.createNamedQuery("PhotoPost.findByUsername").setParameter("username", (User)facesContext.getExternalContext().getSessionMap().get("currViewUser"));
         return query.getResultList();
     }
     

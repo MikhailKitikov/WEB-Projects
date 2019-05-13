@@ -23,6 +23,8 @@ import mksoft.sharemoments.entity.Comment;
 import mksoft.sharemoments.entity.PhotoPost;
 import static mksoft.sharemoments.entity.PhotoPost_.id;
 import mksoft.sharemoments.entity.PostLike;
+import mksoft.sharemoments.entity.User;
+import mksoft.sharemoments.entity.UserData;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.primefaces.context.RequestContext;
 
@@ -48,8 +50,35 @@ public class ProfileViewBean implements Serializable {
     }
     
     public String showUsername() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        return (String)facesContext.getExternalContext().getSessionMap().get("username");
+        return ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
+    }
+    
+    public String showName() {
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
+        if (userData == null)
+            return "";
+        return userData.getName();
+    }
+    
+    public String showLocation() {
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
+        if (userData == null)
+            return "";
+        return userData.getLocation();
+    }
+    
+    public String showBio() {
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
+        if (userData == null)
+            return "";
+        return userData.getBio();
+    }
+    
+    public String showAvatar() {
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
+        if (userData == null)
+            return "";
+        return userData.getAvatar();
     }
 
     public String showId(String id) {
@@ -106,15 +135,13 @@ public class ProfileViewBean implements Serializable {
             return;
         
         try {
-            String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+            String author = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
             Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();        
             if (currentPostLikes.contains(showUsername())) {
                 postLikeDAO.removeLike(author, postID);
-                System.out.println("dec");
             }
             else {
                 postLikeDAO.addLike(author, postID);
-                System.out.println("inc");
             }            
             RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
         }
@@ -152,12 +179,11 @@ public class ProfileViewBean implements Serializable {
     
      
     public int likesCount() {
-        System.out.println("likes = " + currentPostLikes.size());
         return currentPostLikes.size();
     }
     
     public String likeState() {
-        return (currentPostLikes.contains((String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")) ? "dislike" : "like");
+        return (currentPostLikes.contains(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername()) ? "dislike" : "like");
     }
     
 
@@ -198,7 +224,7 @@ public class ProfileViewBean implements Serializable {
     public void createComment() {
         
         try {
-            String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+            String author = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
             Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();
             commentDAO.createComment(author, postID, text);
             List<Comment> f = getCurrentPostComments();

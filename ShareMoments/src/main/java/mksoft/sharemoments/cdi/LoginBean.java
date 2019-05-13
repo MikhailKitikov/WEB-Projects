@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import mksoft.sharemoments.entity.User;
 import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.entity.UserData;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -45,9 +46,10 @@ public class LoginBean implements Serializable {
         }
         loginSuccess = true;
         boolean isAdmin = ("admin".equals(username));
+        User user = userDAO.userObject(username);
         FacesContext context = FacesContext.getCurrentInstance();
-        context.getExternalContext().getSessionMap().put("username", username);
-        context.getExternalContext().getSessionMap().put("currViewUser", username);
+        context.getExternalContext().getSessionMap().put("username", user);
+        context.getExternalContext().getSessionMap().put("currViewUser", user);
         context.getExternalContext().getSessionMap().put("admin", isAdmin);
         return (isAdmin ? "adminPage?faces-redirect=true" : "profilePage?faces-redirect=true");
     }

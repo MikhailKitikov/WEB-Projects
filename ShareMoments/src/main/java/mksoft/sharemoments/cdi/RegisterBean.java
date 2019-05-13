@@ -1,6 +1,9 @@
 package mksoft.sharemoments.cdi;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -8,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.entity.User;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -21,6 +25,10 @@ public class RegisterBean implements Serializable {
     private String username;
     private String password;
     private String confirmPassword;
+    private String name;
+    private String location;
+    private String bio;
+    private String avatar;
     
     private boolean registerSuccess;  
     
@@ -33,24 +41,26 @@ public class RegisterBean implements Serializable {
             registerSuccess = false;
             return "registration";
         } 
-        if (!userDAO.createUser(username, password)) {
+        if (!userDAO.createUser(username, password, name, location, bio)) {
             registerSuccess = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User already exists"));
             return "registration";
         } 
+        
         registerSuccess = true;
+        User user = userDAO.userObject(username);
         FacesContext context = FacesContext.getCurrentInstance();
-        context.getExternalContext().getSessionMap().put("username", username);
-        context.getExternalContext().getSessionMap().put("currViewUser", username);
+        context.getExternalContext().getSessionMap().put("username", user);
+        context.getExternalContext().getSessionMap().put("currViewUser", user);
         return "profilePage?faces-redirect=true";
     }
     
     public boolean validateInput() {
         
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(confirmPassword)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid input"));
-            return false;
-        }
+//        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(confirmPassword)) {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid input"));
+//            return false;
+//        }
         if (!password.equals(confirmPassword)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Passwords do not match"));
             return false;
@@ -91,7 +101,61 @@ public class RegisterBean implements Serializable {
     public void setRegisterSuccess(boolean registerSuccess) {
         this.registerSuccess = registerSuccess;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
     
     public RegisterBean() {
     }
+    
+    //
+    
+    //private Map<String,Map<String,String>> data = new HashMap<String, Map<String,String>>();
+    private Map<String,String> locations;
+     
+    @PostConstruct
+    public void init() {
+        locations  = new HashMap<>();
+        locations.put("Belarus, Minsk", "Belarus, Minsk");
+        locations.put("Germany, Berlin", "Germany, Berlin");
+        locations.put("USA, New York", "USA, New York");
+    }
+
+    public Map<String, String> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Map<String, String> locations) {
+        this.locations = locations;
+    }
+     
 }

@@ -17,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
+import mksoft.sharemoments.entity.User;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -54,7 +55,7 @@ public class CreatePostBean implements Serializable {
     public void submit() {     
         
         try {
-            String username = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+            String username = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
             filename = username + "_" + String.valueOf(new Date().getTime()) + tempFilename.substring(tempFilename.lastIndexOf('.'));
             System.out.println("filename: " + filename);
             copyFile(destination + filename, file.getInputstream());

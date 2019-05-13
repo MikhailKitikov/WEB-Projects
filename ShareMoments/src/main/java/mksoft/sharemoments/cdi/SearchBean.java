@@ -12,6 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.entity.User;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -45,7 +46,8 @@ public class SearchBean implements Serializable {
     
     public void onItemSelect(SelectEvent event) throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
-        context.getExternalContext().getSessionMap().put("currViewUser", username);
+        User user = userDAO.userObject(username);
+        context.getExternalContext().getSessionMap().put("currViewUser", user);
         FacesContext.getCurrentInstance().getExternalContext().redirect("profilePage.xhtml");
     }
     

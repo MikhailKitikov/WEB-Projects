@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -30,6 +31,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")
     , @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username")})
 public class User implements Serializable {
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private UserData userData;
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
@@ -106,6 +110,14 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "mksoft.sharemoments.entity.User[ username=" + username + " ]";
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
     
 }
