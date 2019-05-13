@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import javax.faces.context.FacesContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -53,6 +54,16 @@ public class UserDAO {
         entityManager.persist(userData);
         
         return true;
+    }
+    
+    public void changeAvatar(String avatarSrc) {
+        
+        User user = (User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+        UserData userData = entityManager.find(UserData.class, user.getUsername());
+        if (userData == null)
+            return;
+        Query query = entityManager.createNamedQuery("UserData.changeAvatar").setParameter("avatar", avatarSrc).setParameter("username", user.getUsername());
+        query.executeUpdate();
     }
 
     public List<User> getAllUsers() {        

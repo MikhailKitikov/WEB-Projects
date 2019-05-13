@@ -22,7 +22,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "UserData")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UserData.findAll", query = "SELECT u FROM UserData u")
+    @NamedQuery(name = "UserData.findAll", query = "SELECT u FROM UserData u"),
+    @NamedQuery(name = "UserData.changeAvatar", query = "UPDATE UserData u SET u.avatar = :avatar WHERE u.username = :username")
     , @NamedQuery(name = "UserData.findByName", query = "SELECT u FROM UserData u WHERE u.name = :name")
     , @NamedQuery(name = "UserData.findByBio", query = "SELECT u FROM UserData u WHERE u.bio = :bio")
     , @NamedQuery(name = "UserData.findByAvatar", query = "SELECT u FROM UserData u WHERE u.avatar = :avatar")

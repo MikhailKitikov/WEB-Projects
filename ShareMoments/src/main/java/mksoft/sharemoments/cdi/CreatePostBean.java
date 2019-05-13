@@ -12,13 +12,16 @@ import java.util.Iterator;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
+import mksoft.sharemoments.ejb.UserDAO;
 import mksoft.sharemoments.entity.User;
 import org.eclipse.persistence.jpa.jpql.Assert;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -27,14 +30,15 @@ import org.primefaces.model.UploadedFile;
  * @author mk99
  */
 @ManagedBean(name = "createPostBean", eager = true)
-@ViewScoped
+@SessionScoped
 public class CreatePostBean implements Serializable {
     
     private String filename, tempFilename;
     private UploadedFile file;
-    private final String destination = "/home/mk99/web/data/images/",
-            tempDestination = "/home/mk99/web/data/images/temp/";
     private String postDescription;
+    private final String destination = "/home/mk99/web/data/images/",
+            tempDestination = "/home/mk99/web/data/images/temp/",
+            avatarDestination = "/home/mk99/web/data/images/avatars/";    
     
     @EJB
     private PhotoPostDAO photoPostDAO;
@@ -132,6 +136,26 @@ public class CreatePostBean implements Serializable {
 
     public void setPostDescription(String postDescription) {
         this.postDescription = postDescription;
+    }
+    
+    // avatar
+    
+    @EJB
+    private UserDAO userDAO;
+    
+    public void uploadAvatar(FileUploadEvent event) {     
+        
+        try {
+            String username = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
+            UploadedFile avatarFile = event.getFile();
+            String avatarFilename = username + "_av" + avatarFile.getFileName().substring(avatarFile.getFileName().lastIndexOf('.'));
+            copyFile(avatarDestination + avatarFilename, avatarFile.getInputstream());
+            userDAO.changeAvatar(avatarFilename);
+            RequestContext.getCurrentInstance().update(":avatar");
+        }
+        catch (IOException e) {
+            e.getMessage();
+        }
     }
     
 }

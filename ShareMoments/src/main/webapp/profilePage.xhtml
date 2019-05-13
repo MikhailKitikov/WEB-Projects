@@ -50,11 +50,12 @@
         <p:panel style="position: relative; height: 40px; width: 100%;"/>
         
         <p:panel id='bioPanel'>
-            <h:graphicImage
-                library="images"
-                name= "1.jpeg"
-                style="width:100px; height:100px; -webkit-clip-path: circle(50%); float: left; margin-right: 20px;"     
-            />
+            <h:panelGroup id="avatar-pg"><p:graphicImage
+                id='avatar'
+                url="images/avatars/#{profileViewBean.showAvatar()}"
+                style="width:100px; height:100px; -webkit-clip-path: circle(50%); float: left; margin-right: 20px;"   
+                onclick="showWindow('change-avatar-window');"
+            /></h:panelGroup>
             <h:outputLabel value="Id: " style="color: grey;"/>
             <h:outputLabel value="@#{profileViewBean.showUsername()}" /><br/>
             <h:outputLabel value="Name: " style="color: grey;"/>
@@ -127,6 +128,7 @@
         
         <div id="smallWindow-mask" class="mask" onclick="hideWindow('smallWindow'); return false;" />
         <div id="create-post-window-mask" class="mask" onclick="hideWindow('create-post-window'); changeUploadState(0); return false;" />
+        <div id="change-avatar-window-mask" class="mask" onclick="hideWindow('change-avatar-window'); return false;" />
 
         <p:panel class="footer">
             <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>
@@ -169,6 +171,24 @@
                 </center>
             </p:panel>  
             
+        </p:panel>
+        
+        <p:panel id="change-avatar-window">
+            <center>
+                <h:form enctype="multipart/form-data" class="upload-form" id="upload-form-avatar">   
+                    <p:fileUpload
+                        id="fileUpload-avatar"
+                        mode="advanced"
+                        fileUploadListener="#{createPostBean.uploadAvatar}"
+                        sizeLimit="1000000"
+                        allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                        previewWidth="100"
+                        dragDropSupport="true"
+                        oncomplete="hideWindow('change-avatar-window');"
+                        update=':avatar-pg, :avatar'
+                    />                        
+                </h:form>
+            </center>            
         </p:panel>
         
     </h:body>

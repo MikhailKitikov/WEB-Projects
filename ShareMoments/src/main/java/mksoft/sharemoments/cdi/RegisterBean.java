@@ -28,7 +28,6 @@ public class RegisterBean implements Serializable {
     private String name;
     private String location;
     private String bio;
-    private String avatar;
     
     private boolean registerSuccess;  
     
@@ -125,21 +124,12 @@ public class RegisterBean implements Serializable {
     public void setBio(String bio) {
         this.bio = bio;
     }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
     
     public RegisterBean() {
     }
     
-    //
+    // locations
     
-    //private Map<String,Map<String,String>> data = new HashMap<String, Map<String,String>>();
     private Map<String,String> locations;
      
     @PostConstruct
@@ -157,5 +147,5 @@ public class RegisterBean implements Serializable {
     public void setLocations(Map<String, String> locations) {
         this.locations = locations;
     }
-     
+
 }

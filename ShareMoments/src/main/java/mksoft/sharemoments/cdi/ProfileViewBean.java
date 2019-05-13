@@ -50,34 +50,34 @@ public class ProfileViewBean implements Serializable {
     }
     
     public String showUsername() {
-        return ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
+        return ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
     }
     
     public String showName() {
-        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUserData();
         if (userData == null)
             return "";
         return userData.getName();
     }
     
     public String showLocation() {
-        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUserData();
         if (userData == null)
             return "";
         return userData.getLocation();
     }
     
     public String showBio() {
-        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUserData();
         if (userData == null)
             return "";
         return userData.getBio();
     }
     
     public String showAvatar() {
-        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
-        if (userData == null)
-            return "";
+        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUserData();
+        if (userData == null || userData.getAvatar() == null)
+            return "demo.png";
         return userData.getAvatar();
     }
 
@@ -137,7 +137,7 @@ public class ProfileViewBean implements Serializable {
         try {
             String author = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
             Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();        
-            if (currentPostLikes.contains(showUsername())) {
+            if (currentPostLikes.contains(author)) {
                 postLikeDAO.removeLike(author, postID);
             }
             else {

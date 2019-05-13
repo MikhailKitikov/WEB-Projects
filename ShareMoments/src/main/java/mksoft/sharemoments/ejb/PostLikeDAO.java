@@ -41,7 +41,6 @@ public class PostLikeDAO {
         if (!getCurrentPostLikes(targPostID).contains(from)) {
             return false;
         }
-        //entityManager.getTransaction().begin();
         Query query = entityManager.createNamedQuery("PostLike.removeLike");
         query.setParameter("authorName", from);
         query.setParameter("postID", new PhotoPost(targPostID));
