@@ -39,6 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
 public class PhotoPost implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postID")
+    private Collection<PostLike> postLikeCollection;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postID")
     private Collection<Comment> commentCollection;
 
     private static final long serialVersionUID = 1L;
@@ -148,6 +151,15 @@ public class PhotoPost implements Serializable {
 
     public void setCommentCollection(Collection<Comment> commentCollection) {
         this.commentCollection = commentCollection;
+    }
+
+    @XmlTransient
+    public Collection<PostLike> getPostLikeCollection() {
+        return postLikeCollection;
+    }
+
+    public void setPostLikeCollection(Collection<PostLike> postLikeCollection) {
+        this.postLikeCollection = postLikeCollection;
     }
     
 }

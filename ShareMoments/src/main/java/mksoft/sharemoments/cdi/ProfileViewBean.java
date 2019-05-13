@@ -17,10 +17,12 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import mksoft.sharemoments.ejb.CommentDAO;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
+import mksoft.sharemoments.ejb.PostLikeDAO;
 import mksoft.sharemoments.ejb.UserDAO;
 import mksoft.sharemoments.entity.Comment;
 import mksoft.sharemoments.entity.PhotoPost;
 import static mksoft.sharemoments.entity.PhotoPost_.id;
+import mksoft.sharemoments.entity.PostLike;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.primefaces.context.RequestContext;
 
@@ -85,6 +87,53 @@ public class ProfileViewBean implements Serializable {
         return photoPostDAO.getAllPhotoPosts();
     }
     
+    // likes
+    
+    @EJB
+    private PostLikeDAO postLikeDAO;
+    
+    private static List<String> currentPostLikes;
+    
+    public List<String> getCurrentPostLikes() {
+        if (currImageIndex < 0) return null;
+        currentPostLikes = postLikeDAO.getCurrentPostLikes(currentUserPhotoPosts.get(currImageIndex).getId());
+        return currentPostLikes;
+    }    
+   
+    public void addLike() {
+        
+        if (currentPostLikes == null) 
+            return;
+        
+        try {
+            String author = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+            Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();        
+            if (currentPostLikes.contains(showUsername())) {
+                postLikeDAO.removeLike(author, postID);
+                System.out.println("dec");
+            }
+            else {
+                postLikeDAO.addLike(author, postID);
+                System.out.println("inc");
+            }            
+            RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
+        }
+        catch (EJBException e) {
+            @SuppressWarnings("ThrowableResultIgnored")
+            Exception cause = e.getCausedByException();
+            if (cause instanceof ConstraintViolationException) {
+                @SuppressWarnings("ThrowableResultIgnored")
+                ConstraintViolationException cve = (ConstraintViolationException) e.getCausedByException();
+                for (Iterator<ConstraintViolation<?>> it = cve.getConstraintViolations().iterator(); it.hasNext();) {
+                    ConstraintViolation<? extends Object> v = it.next();
+                    System.err.println(v);
+                    System.err.println("==>>"+v.getMessage());
+                }
+            }
+            Assert.fail("ejb exception");
+        }    
+    }
+    
     // ///// for comments
     
     @EJB
@@ -95,8 +144,22 @@ public class ProfileViewBean implements Serializable {
     public List<Comment> getCurrentPostComments() {
         if (currImageIndex < 0) return null;
         currentPostComments = commentDAO.getCurrentPostComments(currentUserPhotoPosts.get(currImageIndex).getId());
+        renderComments1 = true;
+        getCurrentPostLikes();
+        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
         return currentPostComments;
     }
+    
+     
+    public int likesCount() {
+        System.out.println("likes = " + currentPostLikes.size());
+        return currentPostLikes.size();
+    }
+    
+    public String likeState() {
+        return (currentPostLikes.contains((String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")) ? "dislike" : "like");
+    }
+    
 
     public String currentPostText() {
         return currentUserPhotoPosts.get(currImageIndex).getText();
@@ -110,6 +173,16 @@ public class ProfileViewBean implements Serializable {
 
     public void setRenderComments(boolean renderComments) {
         ProfileViewBean.renderComments = renderComments;
+    }
+    
+    private static boolean renderComments1 = false;
+
+    public boolean isRenderComments1() {
+        return renderComments1;
+    }
+
+    public void setRenderComments1(boolean renderComments1) {
+        ProfileViewBean.renderComments1 = renderComments1;
     }
     
     private String text;
@@ -129,6 +202,7 @@ public class ProfileViewBean implements Serializable {
             Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();
             commentDAO.createComment(author, postID, text);
             List<Comment> f = getCurrentPostComments();
+            List<String> g = getCurrentPostLikes();
             RequestContext.getCurrentInstance().update("commentsFormID:tablePG");
         }
         catch (EJBException e) {
@@ -147,6 +221,10 @@ public class ProfileViewBean implements Serializable {
         }       
     }    
     
+    public int commentsCount() {
+        return currentPostComments.size();
+    }
+    
     //
     
     public void setCurrentImage(Integer id) {
@@ -160,24 +238,29 @@ public class ProfileViewBean implements Serializable {
             }
         }
         currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
+        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
     }
     
     public void nextImage() {
         ++currImageIndex;
         currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
+        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
     }
     
     public void prevImage() {
         --currImageIndex;
         currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
+        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
     }
     
     public String nextImageAvailable() {
-        return (currImageIndex == currentUserPhotoPosts.size() - 1 ? "display: none;" : "display: block;");
+        String st = "position: fixed; right: 380px; height: 10px; width: 10px; font: 10pt; top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;";
+        return (currImageIndex == currentUserPhotoPosts.size() - 1 ? "display: none;" + st : "display: block;" + st);
     }
     
     public String prevImageAvailable() {
-        return (currImageIndex == 0 ? "display: none;" : "display: block;");
+        String st = "position: fixed; left: 80px; height: 10px; width: 10px; font: 10pt; top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;";
+        return (currImageIndex == 0 ? "display: none;"+ st : "display: block;"+ st);
     }
     
 }
