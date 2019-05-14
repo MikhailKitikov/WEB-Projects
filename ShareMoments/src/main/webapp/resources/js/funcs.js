@@ -7,7 +7,7 @@ function showWindow(wnd_id) {
 function hideWindow(wnd_id) {
     document.getElementById(wnd_id).style.display='none'; 
     document.getElementById(wnd_id + '-mask').style.display='none';
-    return false;
+    location.reload();
 }
 
 function changeUploadState(state) {

@@ -20,6 +20,7 @@ import javax.validation.ConstraintViolationException;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
 import mksoft.sharemoments.ejb.UserDAO;
 import mksoft.sharemoments.entity.User;
+import mksoft.sharemoments.entity.UserData;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -147,10 +148,26 @@ public class CreatePostBean implements Serializable {
         
         try {
             String username = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
+            UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUserData();
             UploadedFile avatarFile = event.getFile();
+            if (userData == null)
+                return;
+            File file = new File(avatarDestination + userData.getAvatar()); 
+            if(file.delete()) 
+            { 
+                System.out.println("File deleted successfully"); 
+            } 
+            else
+            { 
+                System.out.println("Failed to delete the file"); 
+            } 
+            
             String avatarFilename = username + "_av" + avatarFile.getFileName().substring(avatarFile.getFileName().lastIndexOf('.'));
             copyFile(avatarDestination + avatarFilename, avatarFile.getInputstream());
             userDAO.changeAvatar(avatarFilename);
+            User user = userDAO.userObject(username);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("username", user);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("currViewUser", user);
             RequestContext.getCurrentInstance().update(":avatar");
         }
         catch (IOException e) {
