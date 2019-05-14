@@ -31,9 +31,9 @@
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Events" url="#"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="Home" url="profilePage.xhtml?faces-redirect=true"/>
+                <p:menuitem value="Home" action="#{searchBean.goHome()}"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="+" onclick="showWindow('create-post-window');"/>
+                <p:menuitem value="+" onclick="#{profileViewBean.f()} showWindow('create-post-window');"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Quit" url="index?faces-redirect=true"/>
                 <f:facet name='options'>
@@ -54,7 +54,7 @@
                 id='avatar'
                 url="images/avatars/#{profileViewBean.showAvatar()}"
                 style="width:100px; height:100px; -webkit-clip-path: circle(50%); float: left; margin-right: 20px;"   
-                onclick="showWindow('change-avatar-window');"
+                onclick="#{profileViewBean.f()} showWindow('change-avatar-window');"
             /></h:panelGroup>
             <h:outputLabel value="Id: " style="color: grey;"/>
             <h:outputLabel value="@#{profileViewBean.showUsername()}" /><br/>
@@ -106,7 +106,7 @@
                         <p:dataTable rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="220">
                             <p:column>
                                 <h:outputText style='font: 10pt grey;' value="#{comment.authorName}: "/>
-                                <h:outputText value="#{comment.text}"/>
+                                <h:outputText value="#{comment.text}" rendered="#{profileViewBean.renderComments}"/>
                             </p:column>
                         </p:dataTable>
                     </h:panelGroup>
@@ -128,7 +128,7 @@
         
         <div id="smallWindow-mask" class="mask" onclick="hideWindow('smallWindow'); return false;" />
         <div id="create-post-window-mask" class="mask" onclick="hideWindow('create-post-window'); changeUploadState(0); return false;" />
-        <div id="change-avatar-window-mask" class="mask" onclick="hideWindow('change-avatar-window');" />
+        <div id="change-avatar-window-mask" class="mask" onclick="hideWindow('change-avatar-window'); #{createPostBean.toReload()}" />
 
         <p:panel class="footer">
             <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>

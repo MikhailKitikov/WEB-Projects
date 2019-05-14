@@ -144,6 +144,27 @@ public class CreatePostBean implements Serializable {
     @EJB
     private UserDAO userDAO;
     
+    public boolean toUpdate = false;
+
+    public boolean isToUpdate() {
+        if (toUpdate == true) {
+            toUpdate = false;
+            return true;
+        }
+        return toUpdate;
+    }
+
+    public void setToUpdate(boolean toUpdate) {
+        this.toUpdate = toUpdate;
+    }
+    
+    public String toReload() {
+        if (isToUpdate())
+            return "location.reload();";
+        else
+            return "";
+    }
+    
     public void uploadAvatar(FileUploadEvent event) {     
         
         try {
@@ -152,15 +173,8 @@ public class CreatePostBean implements Serializable {
             UploadedFile avatarFile = event.getFile();
             if (userData == null)
                 return;
-            File file = new File(avatarDestination + userData.getAvatar()); 
-            if(file.delete()) 
-            { 
-                System.out.println("File deleted successfully"); 
-            } 
-            else
-            { 
-                System.out.println("Failed to delete the file"); 
-            } 
+            File old_file = new File(avatarDestination + userData.getAvatar()); 
+            old_file.delete();
             
             String avatarFilename = username + "_av" + avatarFile.getFileName().substring(avatarFile.getFileName().lastIndexOf('.'));
             copyFile(avatarDestination + avatarFilename, avatarFile.getInputstream());
@@ -169,6 +183,7 @@ public class CreatePostBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("username", user);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("currViewUser", user);
             RequestContext.getCurrentInstance().update(":avatar");
+            toUpdate = true;
         }
         catch (IOException e) {
             e.getMessage();

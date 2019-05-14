@@ -289,4 +289,13 @@ public class ProfileViewBean implements Serializable {
         return (currImageIndex == 0 ? "display: none;"+ st : "display: block;"+ st);
     }
     
+    public String f() {
+        User user = (User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+        User viewUser = (User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser");
+        if (user.equals(viewUser))
+            return "";
+        else
+            return "return false;";
+    }
+    
 }
