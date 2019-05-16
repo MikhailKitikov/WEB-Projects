@@ -19,3 +19,26 @@ function changeUploadState(state) {
         document.getElementById('panpan').style.display='none';
     }
 }
+
+function changeView() {
+    var state = document.getElementById('photo-gallery').style.display;
+    if (state === "block") {
+        document.getElementById('photo-gallery').style.display = "none";
+        document.getElementById('photo-wall').style.display = "block";
+    }
+    else {
+        document.getElementById('photo-gallery').style.display = "block";
+        document.getElementById('photo-wall').style.display = "none";
+    }
+}
+
+//window.onscroll = function() {
+//    if (window.scrollY > 40) {
+//        document.getElementById('fmb:mb').style.height = "20px";
+//        document.getElementById('fmb').style.height = "20px";
+//    }
+//    else {
+//        document.getElementById('fmb:mb').style.height = "40px";
+//        document.getElementById('fmb').style.height = "40px";
+//    }
+//};

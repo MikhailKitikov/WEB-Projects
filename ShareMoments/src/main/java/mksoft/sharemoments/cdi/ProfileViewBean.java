@@ -16,10 +16,12 @@ import javax.faces.context.FacesContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import mksoft.sharemoments.ejb.CommentDAO;
+import mksoft.sharemoments.ejb.FollowerDAO;
 import mksoft.sharemoments.ejb.PhotoPostDAO;
 import mksoft.sharemoments.ejb.PostLikeDAO;
 import mksoft.sharemoments.ejb.UserDAO;
 import mksoft.sharemoments.entity.Comment;
+import mksoft.sharemoments.entity.Follower;
 import mksoft.sharemoments.entity.PhotoPost;
 import static mksoft.sharemoments.entity.PhotoPost_.id;
 import mksoft.sharemoments.entity.PostLike;
@@ -298,4 +300,35 @@ public class ProfileViewBean implements Serializable {
             return "return false;";
     }
     
+    
+    // followers
+    
+    @EJB
+    private FollowerDAO followerDAO;
+    
+    public String followable() {
+        return (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username").equals(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")) ? "display: none;" : "display: block;");
+    }
+    
+    public int followingsCount() {
+        String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
+        return followerDAO.getUserFollowings(who).size();
+    }
+    
+    public int followersCount() {
+        String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
+        return followerDAO.getUserFollowers(whom).size();
+    }
+    
+    public void followUnfollow() {
+        String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
+        String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
+        followerDAO.followUnfollow(who, whom);
+    }
+    
+    public String followState() {
+        String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
+        String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
+        return (followerDAO.isFollowing(who, whom) ? "do not follow" : "follow");
+    }
 }

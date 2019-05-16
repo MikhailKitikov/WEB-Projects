@@ -16,6 +16,7 @@
   padding-bottom: 6rem;
   min-height: 100%;
   font-family: "Helvetica Neue", Arial, sans-serif;
+  background-color: whitesmoke;
 }
 
 .upload-form {
@@ -157,7 +158,7 @@ td {
     margin-left:10px;
 }
 
-.header {
+.main-menu {
     position: fixed;
     width: 100%;
     height: 40px;
@@ -172,6 +173,7 @@ td {
     margin: 0;
     border-width: 0;
     border-bottom-width: 1px;
+    display: block;
 }
 
 .ui-widget-header {
@@ -215,6 +217,14 @@ td {
     opacity: 0.9;
 }
 
+.thumbnail-large {
+    z-index: 50;
+    width: 500px;
+    height: 400px;
+    margin: 10px;
+    cursor: zoom-in;
+}
+
 .footer {
   position: absolute;
   right: 0;
@@ -230,6 +240,7 @@ td {
     padding: 0;
     margin: 0;
     border: 0;
+    text-align: left;
 }
 
 .ui-widget-content {
@@ -248,7 +259,11 @@ td {
 .word-wrap-text {
     word-wrap: break-word;
     display: block;
-    width: 200px; /* Optional, depends otherwise on parent. */
+    width: 200px;
     height: 50px;
     overflow: auto;
+}
+
+.post-wall-panel {
+    
 }

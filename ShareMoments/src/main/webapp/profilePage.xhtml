@@ -18,9 +18,12 @@
     
     <h:body id="gbody">
         
-        <h:form class='header'>
+        
+        <!--menu-->
+        
+        <h:form class='main-menu'>
             <p:growl id="msgs" showDetail="true" />
-            <p:menubar  class='header'>
+            <p:menubar class='main-menu'>
                 <p:menuitem>
                     <h:link outcome="index.xhtml?faces-redirect=true">
                         <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
@@ -30,6 +33,8 @@
                 <p:menuitem value="All posts" url="allPosts.xhtml?faces-redirect=true"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Events" url="#"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="View" onclick="changeView(); return false;"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Home" action="#{searchBean.goHome()}"/>
                 <p:menuitem value="     |      " disabled="true"/>
@@ -49,27 +54,53 @@
         
         <p:panel style="position: relative; height: 40px; width: 100%;"/>
         
+        
+        <!--bio-->
+        
         <p:panel id='bioPanel'>
+            
             <h:panelGroup id="avatar-pg"><p:graphicImage
                 id='avatar'
                 url="images/avatars/#{profileViewBean.showAvatar()}"
                 style="width:100px; height:100px; -webkit-clip-path: circle(50%); float: left; margin-right: 20px;"   
                 onclick="#{profileViewBean.f()} showWindow('change-avatar-window');"
             /></h:panelGroup>
-            <h:outputLabel value="Id: " style="color: grey;"/>
-            <h:outputLabel value="@#{profileViewBean.showUsername()}" /><br/>
-            <h:outputLabel value="Name: " style="color: grey;"/>
-            <h:outputLabel value="#{profileViewBean.showName()}" /><br/>
-            <h:outputLabel value="Location: " style="color: grey;"/>
-            <h:outputLabel value="#{profileViewBean.showLocation()}" /><br/>
-            <h:outputLabel value="Bio: " style="color: grey;"/>
-            <h:outputLabel value="#{profileViewBean.showBio()}" escape="false" /><br/>
+            
+            <p:panelGrid columns="2" style="width: 500px; height: 100px; font-size: 10pt;">      
+                                         
+                <h:outputLabel value="Id: " style="color: grey;"/>
+                <h:outputLabel value="@#{profileViewBean.showUsername()}" />
+                
+                <h:outputLabel value="Name: " style="color: grey;"/>
+                <h:outputLabel value="#{profileViewBean.showName()}" />
+                
+                <h:outputLabel value="Location: " style="color: grey;"/>
+                <h:outputLabel value="#{profileViewBean.showLocation()}" />
+                
+                <h:outputLabel value="Bio: " style="color: grey;"/>
+                <h:outputLabel value="#{profileViewBean.showBio()}" escape="false" />
+ 
+            </p:panelGrid>              
+            
+            <h:form style="position: absolute; width: 300px; height: 50px; right: 200px; top: 40px; font-size: 8pt;">
+                <p:panel id="followers-panel">
+                    <p:panelGrid columns="2" style="width: 300px;">
+                        <p:commandButton style="background-color: white; border: 0; font-size: 8pt; #{profileViewBean.followable()}" id="follow-button" value="#{profileViewBean.followState()}" action="#{profileViewBean.followUnfollow()}" update="followers-label, @this"/>
+                        <p:outputLabel id="followers-label" style="color: grey; font-size: 8pt;" value="Followers: #{profileViewBean.followersCount()} | Follows: #{profileViewBean.followingsCount()}"/>
+                    </p:panelGrid>
+                </p:panel>
+            </h:form>   
+            
         </p:panel>
         
+        
+        <!--gallery type 1-->
+        
         <center>        
-            <h:panelGroup styleClass="imagebox" id="photo-gallery">  
+            <h:panelGroup styleClass="imagebox" id="photo-gallery" style="display: block;">  
                 <h:form>
                 <h:panelGrid columns="3">
+                    
                     <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">
                         <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow('smallWindow');">
                             <h:graphicImage
@@ -78,10 +109,40 @@
                             ><div class="thumbnail-overlay"/></h:graphicImage>
                         </p:commandLink>
                     </c:forEach>
+                    
                 </h:panelGrid>
                 </h:form>
             </h:panelGroup>        
         </center>
+        
+        
+        <!--gallery type 2-->        
+        
+        <center>        
+            <h:panelGroup styleClass="imagebox" id="photo-wall" style="display: none;">  
+                <h:form>
+                <h:panelGrid columns="1">
+                    
+                    <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">
+                        
+                        <p:panel style="height: 550px;" class="post-wall-panel">
+                            <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow('smallWindow');">
+                                <h:graphicImage
+                                class="thumbnail-large"                        
+                                value="images/#{postItem.src}"                           
+                                />
+                            </p:commandLink>
+                        </p:panel>       
+                        
+                    </c:forEach>
+                    
+                </h:panelGrid>
+                </h:form>
+            </h:panelGroup>        
+        </center>
+        
+        
+        <!--post viewing-->
         
         <p:panelGrid columns="2" id="smallWindow" style="padding: 0; border: 0;" >
             
@@ -126,14 +187,8 @@
             
         </p:panelGrid>
         
-        <div id="smallWindow-mask" class="mask" onclick="hideWindow('smallWindow'); return false;" />
-        <div id="create-post-window-mask" class="mask" onclick="hideWindow('create-post-window'); changeUploadState(0); return false;" />
-        <div id="change-avatar-window-mask" class="mask" onclick="hideWindow('change-avatar-window'); #{createPostBean.toReload()}" />
-
-        <p:panel class="footer">
-            <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>
-        </p:panel> 
         
+        <!--creating post-->        
         
         <p:panel id="create-post-window">
             <center>
@@ -173,6 +228,9 @@
             
         </p:panel>
         
+        
+        <!--avatar changing-->
+        
         <p:panel id="change-avatar-window">
             <center>
                 <h:form enctype="multipart/form-data" class="upload-form" id="upload-form-avatar">   
@@ -190,6 +248,17 @@
                 </h:form>
             </center>            
         </p:panel>
+        
+        
+        <!--other-->
+        
+        <div id="smallWindow-mask" class="mask" onclick="hideWindow('smallWindow'); return false;" />
+        <div id="create-post-window-mask" class="mask" onclick="hideWindow('create-post-window'); changeUploadState(0); return false;" />
+        <div id="change-avatar-window-mask" class="mask" onclick="hideWindow('change-avatar-window'); #{createPostBean.toReload()}" />
+
+        <p:panel class="footer">
+            <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>
+        </p:panel> 
         
     </h:body>
 </html>
