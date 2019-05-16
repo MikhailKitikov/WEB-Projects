@@ -20,7 +20,7 @@ import org.primefaces.event.SelectEvent;
  * @author mk99
  */
 @ManagedBean(name = "searchBean", eager = true)
-@javax.faces.bean.SessionScoped
+@SessionScoped
 public class SearchBean implements Serializable {
     
     @EJB
@@ -36,8 +36,8 @@ public class SearchBean implements Serializable {
         this.username = username;
     }
  
-    public List<String> userList() {         
-        List<String> resList = userDAO.getAllUsernames();
+    public List<String> userList(String query) {
+        List<String> resList = userDAO.searchUser(query);
         if (resList.contains("admin")) 
             resList.remove("admin");
         Collections.sort(resList);

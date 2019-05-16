@@ -77,7 +77,7 @@ public class UserDAO {
     }
     
     public List<String> searchUser(String name) {        
-        Query query = entityManager.createNamedQuery("User.findLike").setParameter("name", "'%" + name + "%'");
+        Query query = entityManager.createNamedQuery("User.findLike").setParameter("name", "%" + name + "%");
         return query.getResultList();
     }
     

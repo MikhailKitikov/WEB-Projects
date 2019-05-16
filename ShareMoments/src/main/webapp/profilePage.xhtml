@@ -40,10 +40,10 @@
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="+" onclick="#{profileViewBean.f()} showWindow('create-post-window');"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="Quit" url="index?faces-redirect=true"/>
+                <p:menuitem value="Quit" action="#{logBean.logout()}"/>
                 <f:facet name='options'>
                     <h:panelGrid id="countryTable" columns="2" cellpadding="0">                                  
-                        <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList()}">
+                        <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList}">
                             <p:ajax event="itemSelect" listener="#{searchBean.onItemSelect}" update="msgs" />
                         </p:autoComplete>          
                         <p:panel style="width: 30px !important; opacity: 0;"/>
@@ -52,65 +52,66 @@
             </p:menubar>
         </h:form>
         
-        <p:panel style="position: relative; height: 40px; width: 100%;"/>
+        <p:panel style="position: relative; height: 50px; width: 100%;"/>
         
         
         <!--bio-->
         
-        <p:panel id='bioPanel'>
-            
-            <h:panelGroup id="avatar-pg"><p:graphicImage
-                id='avatar'
-                url="images/avatars/#{profileViewBean.showAvatar()}"
-                style="width:100px; height:100px; -webkit-clip-path: circle(50%); float: left; margin-right: 20px;"   
-                onclick="#{profileViewBean.f()} showWindow('change-avatar-window');"
-            /></h:panelGroup>
-            
-            <p:panelGrid columns="2" style="width: 500px; height: 100px; font-size: 10pt;">      
-                                         
-                <h:outputLabel value="Id: " style="color: grey;"/>
-                <h:outputLabel value="@#{profileViewBean.showUsername()}" />
-                
-                <h:outputLabel value="Name: " style="color: grey;"/>
-                <h:outputLabel value="#{profileViewBean.showName()}" />
-                
-                <h:outputLabel value="Location: " style="color: grey;"/>
-                <h:outputLabel value="#{profileViewBean.showLocation()}" />
-                
-                <h:outputLabel value="Bio: " style="color: grey;"/>
-                <h:outputLabel value="#{profileViewBean.showBio()}" escape="false" />
- 
-            </p:panelGrid>              
-            
-            <h:form style="position: absolute; width: 300px; height: 50px; right: 200px; top: 40px; font-size: 8pt;">
-                <p:panel id="followers-panel">
-                    <p:panelGrid columns="2" style="width: 300px;">
-                        <p:commandButton style="background-color: white; border: 0; font-size: 8pt; #{profileViewBean.followable()}" id="follow-button" value="#{profileViewBean.followState()}" action="#{profileViewBean.followUnfollow()}" update="followers-label, @this"/>
-                        <p:outputLabel id="followers-label" style="color: grey; font-size: 8pt;" value="Followers: #{profileViewBean.followersCount()} | Follows: #{profileViewBean.followingsCount()}"/>
-                    </p:panelGrid>
-                </p:panel>
-            </h:form>   
-            
-        </p:panel>
+        <center>
+            <p:panelGrid id='bioPanel' columns="2" class="bio-panel">
+
+                <h:panelGroup id="avatar-pg">
+                    <p:panelGrid columns="1" style="width: 100px;">
+                         <p:graphicImage
+                            id='avatar'
+                            url="images/avatars/#{profileViewBean.showAvatar()}"
+                            style="width:100px; height:100px; -webkit-clip-path: circle(50%); float: left; margin-right: 20px;"   
+                            onclick="#{profileViewBean.f()} showWindow('change-avatar-window');"
+                        />
+                        <h:form style="font-size: 8pt;" id="followers-panel">
+                            <center> <p:outputLabel id="followers-label" style="color: grey; font-size: 8pt;" value="Followers: #{profileViewBean.followersCount()} | Follows: #{profileViewBean.followingsCount()}"/></center> 
+                            <center> <p:commandButton style="background-color: white; border: 0; font-size: 8pt; #{profileViewBean.followable()}" id="follow-button" value="#{profileViewBean.followState()}" action="#{profileViewBean.followUnfollow()}" update="followers-label, @this"/></center> 
+                        </h:form>
+                    </p:panelGrid>                  
+                </h:panelGroup>
+
+                <p:panelGrid columns="2" style="width: 500px; height: 100px; font-size: 10pt;">      
+
+                    <h:outputLabel value="Id: " style="color: grey;"/>
+                    <h:outputLabel value="@#{profileViewBean.showUsername()}" />
+
+                    <h:outputLabel value="Name: " style="color: grey;"/>
+                    <h:outputLabel value="#{profileViewBean.showName()}" />
+
+                    <h:outputLabel value="Location: " style="color: grey;"/>
+                    <h:outputLabel value="#{profileViewBean.showLocation()}" />
+
+                    <h:outputLabel value="Bio: " style="color: grey;"/>
+                    <h:outputLabel value="#{profileViewBean.showBio()}" escape="false" />
+
+                </p:panelGrid>              
+
+            </p:panelGrid>
+        </center>
+        
+        <p:separator style="width: 836px; border-width: 0.4px; border-color: lightgrey;"/>
         
         
         <!--gallery type 1-->
         
         <center>        
             <h:panelGroup styleClass="imagebox" id="photo-gallery" style="display: block;">  
-                <h:form>
-                <h:panelGrid columns="3">
-                    
-                    <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">
-                        <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow('smallWindow');">
-                            <h:graphicImage
-                            class="thumbnail"                        
-                            value="images/#{postItem.src}"                           
-                            ><div class="thumbnail-overlay"/></h:graphicImage>
-                        </p:commandLink>
-                    </c:forEach>
-                    
-                </h:panelGrid>
+                <h:form style="width: 100%;">
+                    <h:panelGrid columns="3">                    
+                        <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">
+                            <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow('smallWindow');">
+                                <h:graphicImage
+                                class="thumbnail"                        
+                                value="images/#{postItem.src}"                           
+                                ><div class="thumbnail-overlay"/></h:graphicImage>
+                            </p:commandLink>
+                        </c:forEach>                    
+                    </h:panelGrid>
                 </h:form>
             </h:panelGroup>        
         </center>
@@ -123,16 +124,23 @@
                 <h:form>
                 <h:panelGrid columns="1">
                     
-                    <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">
+                    <c:forEach items="#{profileViewBean.currentUserPhotoPosts}" var="postItem">     
                         
                         <p:panel style="height: 550px;" class="post-wall-panel">
+                            
+                            <f:facet name="header">
+                                <h:graphicImage                      
+                                    value="images/avatars/#{postItem.getUsername().getUserData().getAvatar()}"
+                                    style="width: 70px; height: 70px; float: left; -webkit-clip-path: circle(50%);"
+                                    />
+                            </f:facet>
                             <p:commandLink action="#{profileViewBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow('smallWindow');">
                                 <h:graphicImage
                                 class="thumbnail-large"                        
                                 value="images/#{postItem.src}"                           
                                 />
                             </p:commandLink>
-                        </p:panel>       
+                        </p:panel>  
                         
                     </c:forEach>
                     

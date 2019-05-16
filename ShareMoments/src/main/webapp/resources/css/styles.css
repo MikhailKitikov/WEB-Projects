@@ -150,12 +150,34 @@ td {
 }
 
 .imagebox {
-    max-width: 800px; 
     position: relative;
 }
 
 .imagebox a {
     margin-left:10px;
+}
+
+.ui-datalist .ui-datalist-content {
+    border:0 none
+}
+
+.ui-datalist ul {
+    padding: 0px 10px 0 20px;
+    margin: 5px 0;
+}
+
+.bio-panel .ui-widget-content {
+    background-color: whitesmoke;
+}
+
+.value {
+    font-weight: bold;
+}
+
+.ui-autocomplete-itemtip {
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 .main-menu {
@@ -172,7 +194,6 @@ td {
     color: black;
     margin: 0;
     border-width: 0;
-    border-bottom-width: 1px;
     display: block;
 }
 
@@ -198,11 +219,12 @@ td {
 /*    transition-duration: 1s;*/
     position: relative;
     margin-bottom: 20px;
-    width: 100%;
     z-index: 100;
     left: 0;
     height: 120px;
     border-width: 0;
+    background-color: whitesmoke;
+    width: 836px !important;
 }
 
 .thumbnail {

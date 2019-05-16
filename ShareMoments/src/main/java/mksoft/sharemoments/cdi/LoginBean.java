@@ -1,5 +1,6 @@
 package mksoft.sharemoments.cdi;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
@@ -68,14 +69,14 @@ public class LoginBean implements Serializable {
     
     ///    
     
-    public String logout() {
+    public void logout() throws IOException {
 
         if (!loginSuccess) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "!", "You are not logged in"));
         }
         loginSuccess = false;
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "index?faces-redirect=true";
+        FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
     }
     
     public void showResult()
