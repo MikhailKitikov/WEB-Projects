@@ -23,11 +23,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "UserData.findAll", query = "SELECT u FROM UserData u"),
-    @NamedQuery(name = "UserData.changeAvatar", query = "UPDATE UserData u SET u.avatar = :avatar WHERE u.username = :username")
+    @NamedQuery(name = "UserData.changeAvatar", query = "UPDATE UserData u SET u.avatar = :avatar WHERE u.username = :username"),
+    @NamedQuery(name = "UserData.changeInfo", query = "UPDATE UserData u SET u.name = :name, u.bio = :bio WHERE u.username = :username")
     , @NamedQuery(name = "UserData.findByName", query = "SELECT u FROM UserData u WHERE u.name = :name")
     , @NamedQuery(name = "UserData.findByBio", query = "SELECT u FROM UserData u WHERE u.bio = :bio")
     , @NamedQuery(name = "UserData.findByAvatar", query = "SELECT u FROM UserData u WHERE u.avatar = :avatar")
-    , @NamedQuery(name = "UserData.findByLocation", query = "SELECT u FROM UserData u WHERE u.location = :location")
     , @NamedQuery(name = "UserData.findByUsername", query = "SELECT u FROM UserData u WHERE u.username = :username")})
 public class UserData implements Serializable {
 
@@ -41,9 +41,6 @@ public class UserData implements Serializable {
     @Size(max = 60)
     @Column(name = "avatar")
     private String avatar;
-    @Size(max = 60)
-    @Column(name = "location")
-    private String location;
     @Id
     @Basic(optional = false)
     @NotNull
@@ -83,14 +80,6 @@ public class UserData implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getUsername() {

@@ -28,17 +28,13 @@ public class LoginBean implements Serializable {
 
     @EJB
     private UserDAO userDAO;
-    
-    //
 
-    public String login() {
-        
+    public String login() {        
         if (!validateInput()) {
             loginSuccess = false;
             return "authorization";
         } 
-        int res = userDAO.checkPassword(username, password);  
-        
+        int res = userDAO.checkPassword(username, password);          
         if (res != 0) {
             loginSuccess = false;
             String msg = (res == 1 ? "User not found" : "Incorrect password");
@@ -56,36 +52,25 @@ public class LoginBean implements Serializable {
     }
     
     public boolean validateInput() {        
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+        if (username == null || password == null || StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid input"));
             return false;
         }
         return true;
     }
-
-    public List<User> getAllUsers(){
-        return userDAO.getAllUsers();
-    }
-    
-    ///    
     
     public void logout() throws IOException {
 
         if (!loginSuccess) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "!", "You are not logged in"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "!", "You are not logged in"));
         }
         loginSuccess = false;
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
     }
     
-    public void showResult()
-    { 
-        String msg = "You are welcome, " + username + "!";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", msg));
-    }
     
-    //
+    //    
     
     public String getUsername() {
         return username;

@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>News</title>
+        <h:outputStylesheet library="css" name="styles.css" />
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet"/>
+        <h:outputScript library='js' name='gallery.js'/>
+        <h:outputScript library='js' name='funcs.js'/>
+    </h:head>
+    <h:body class="gbody">
+                   
+        <!--menu-->
+        
+        <h:form class='main-menu'>
+            <p:growl id="msgs" showDetail="true" />
+            <p:menubar class='main-menu'>
+                <p:menuitem>
+                    <h:link outcome="index.xhtml?faces-redirect=true">
+                        <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
+                    </h:link>
+                </p:menuitem>
+                <p:menuitem value="           " disabled="true"/>
+                <p:menuitem value="Home" action="#{searchBean.goHome()}"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Events" url="#"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="News" url="newsPage.xhtml?faces-redirect=true"/>
+                <p:menuitem value="     |      " disabled="true"/>
+                <p:menuitem value="Quit" action="#{logBean.logout()}"/>
+                <f:facet name='options'>
+                    <h:panelGrid id="countryTable" columns="2" cellpadding="0">                                  
+                        <p:autoComplete emptyMessage="no users found" placeholder="Search" id="countryList" value="#{searchBean.username}" completeMethod="#{searchBean.userList}">
+                            <p:ajax event="itemSelect" listener="#{searchBean.onItemSelect}" update="msgs" />
+                        </p:autoComplete>          
+                        <p:panel style="width: 30px !important; opacity: 0;"/>
+                    </h:panelGrid>
+                </f:facet>
+            </p:menubar>
+        </h:form>
+        
+        <p:panel style="position: relative; height: 50px; width: 100%;"/>
+        
+        
+        <!-- gallery -->        
+        
+        <center>        
+            <h:panelGroup styleClass="imagebox" id="photo-wall">  
+                <h:form id="post-wall-form">
+                    <h:panelGrid columns="1">
+                        <c:forEach items="#{newsBean.currentUserNews}" var="postItem">
+                            <p:panel style="height: 550px; margin-bottom: 30px;" class="post-wall-panel" id="post-wall-panel">                            
+                                <p:panel id="post-wall-header">
+                                    <h:graphicImage                      
+                                        value="images/avatars/#{postItem.getUsername().getUserData().getAvatar()}"
+                                        style="width: 70px; height: 70px; float: left; -webkit-clip-path: circle(50%);"
+                                        />
+                                    <h:outputText value="#{postItem.getUsername().username}" style="font-size: 10pt; color: grey; float: left; margin-left: 20px;"/>
+                                    <br/>
+                                    <h:outputText value="#{postItem.location}" style="font-size: 10pt; color: navy; float: left; margin-left: 20px;"/>
+                                </p:panel>
+                                <p:commandLink action="#{newsBean.setCurrentImage(postItem.id)}" update=":smallWindow" oncomplete="showWindow('smallWindow');">
+                                    <h:graphicImage
+                                        class="thumbnail-large"                        
+                                        value="images/#{postItem.src}"                           
+                                        />
+                                </p:commandLink>
+                            </p:panel>                          
+                        </c:forEach>
+                    </h:panelGrid>
+                </h:form>
+            </h:panelGroup>        
+        </center>
+        
+        
+        <!--post viewing-->
+        
+        <p:panelGrid columns="2" id="smallWindow" style="padding: 0; border: 0;" >
+            
+            <h:panelGroup id="image-pg">
+                <h:graphicImage class="changing-image" value="images/#{newsBean.currSrc}"/>
+            </h:panelGroup>
+            
+            <p:panel id="commentsPanelID" style="height: 390px; width: 300px; margin: 0; padding: 0; padding-left: 10px; padding-right: 10px;">
+                <h:form id="commentsFormID" style="height: 200px !important;">
+                    
+                    <h:outputText style="max-height: 20px !important; max-width: 200px; font: 10pt blue;" rendered="#{newsBean.renderComments}" value="#{newsBean.currentPostLocation()}"/>
+                    <h:outputText style="max-height: 40px !important; max-width: 200px; font: 10pt grey;" styleClass="word-wrap-text" rendered="#{newsBean.renderComments}" value="#{newsBean.currentPostText()}"/>
+                    
+                    <h:panelGroup id="tablePG" style="height: 220px;">
+                        <p:dataTable rendered="#{newsBean.renderComments}" id="commentDataTableID" var="comment" value="#{newsBean.currentPostComments}" scrollable="true" scrollHeight="220">
+                            <p:column>
+                                <h:outputText style='font: 10pt grey;' value="#{comment.authorName}: "/>
+                                <h:outputText value="#{comment.text}" rendered="#{newsBean.renderComments}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                    
+                    <p:panelGrid columns="2" style="width: 250px; margin-top: 10px;" rendered="#{newsBean.renderComments}">
+                        <p:commandButton style="background-color: white; border: 0; font-size: 10pt;" id="like-button" value="#{newsBean.likeState()}" action="#{newsBean.addLike()}" update="like-comment-label, @this"/>
+                        <p:outputLabel id="like-comment-label" style="color: grey; font-size: 10pt;" value="Likes: #{newsBean.likesCount()} | Comments: #{newsBean.commentsCount()}"/>
+                    </p:panelGrid>
+                    
+                    <p:panelGrid columns="2" style="width: 250px; height: auto; padding: 0; margin: 10px; margin-right: 10px; margin-bottom: 0;">
+                        <p:inputText value="#{newsBean.text}" style="width: 200px; height: 20px;"/>
+                        <p:commandButton style="background-color: white; border: 0; font-size: 10pt; margin-left: 10px; margin-left: 10px;" value="add" action="#{newsBean.createComment()}" update="commentDataTableID" oncomplete="showWindow('smallWindow');"/>
+                    </p:panelGrid>
+                    
+                </h:form>
+            </p:panel>  
+            
+        </p:panelGrid>
+        
+        
+        <!--other-->
+        
+        <div id="smallWindow-mask" class="mask" onclick="hideWindow('smallWindow'); return false;" />
+
+        <p:panel class="footer">
+            <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>
+        </p:panel>
+
+    </h:body>
+</html>
+

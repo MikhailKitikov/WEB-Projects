@@ -56,10 +56,6 @@ public class SearchBean implements Serializable {
         context.getExternalContext().getSessionMap().put("currViewUser", (User)context.getExternalContext().getSessionMap().get("username"));
         FacesContext.getCurrentInstance().getExternalContext().redirect("profilePage.xhtml");
     }
-    
-//    public void onItemChange(SelectEvent event) throws IOException {
-//        userList();
-//    }
 
     public SearchBean() {
     }

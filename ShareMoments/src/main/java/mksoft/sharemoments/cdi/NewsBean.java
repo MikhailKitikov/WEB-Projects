@@ -25,35 +25,14 @@ import org.primefaces.context.RequestContext;
  *
  * @author mk99
  */
-@ManagedBean(name = "profileViewBean", eager = true)
+@ManagedBean(name = "newsBean", eager = true)
 @SessionScoped
-public class ProfileViewBean implements Serializable {
-    
+public class NewsBean implements Serializable {    
+        
     // main info
     
     public String showUsername() {
         return ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
-    }
-    
-    public String showName() {
-        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUserData();
-        if (userData == null)
-            return "";
-        return userData.getName();
-    }
-    
-    public String showBio() {
-        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUserData();
-        if (userData == null)
-            return "";
-        return userData.getBio();
-    }
-    
-    public String showAvatar() {
-        UserData userData = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUserData();
-        if (userData == null || userData.getAvatar() == null)
-            return "demo.png";
-        return userData.getAvatar();
     }
 
     public String showId(String id) {
@@ -73,7 +52,7 @@ public class ProfileViewBean implements Serializable {
     }
 
     public void setCurrSrc(String currSrc) {
-        ProfileViewBean.currSrc = currSrc;
+        NewsBean.currSrc = currSrc;
     }
     
     private static int currImageIndex = -1;
@@ -83,18 +62,28 @@ public class ProfileViewBean implements Serializable {
     }
 
     public void setCurrImageIndex(int currImageIndex) {
-        ProfileViewBean.currImageIndex = currImageIndex;
+        NewsBean.currImageIndex = currImageIndex;
     }
     
-    private List<PhotoPost> currentUserPhotoPosts;
+    private List<PhotoPost> currentUserNews;
     
-    public List<PhotoPost> getCurrentUserPhotoPosts() {
-        currentUserPhotoPosts = photoPostDAO.getCurrentUserPhotoPosts();
-        return currentUserPhotoPosts;
+    public List<PhotoPost> getCurrentUserNews() {
+        currentUserNews = photoPostDAO.getCurrentUserNews();
+        return currentUserNews;
     }
     
-    public List<PhotoPost> getAllPhotoPosts() {
-        return photoPostDAO.getAllPhotoPosts();
+    public void setCurrentImage(Integer id) {
+        
+        renderComments = true;
+        currImageIndex = -1;
+        for (int i = 0; i < currentUserNews.size(); ++i) {
+            if (currentUserNews.get(i).getId().intValue() == id.intValue()) {
+                currImageIndex = i;
+                break;
+            }
+        }
+        currSrc = currentUserNews.get(currImageIndex).getSrc();
+        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
     }
     
     
@@ -107,7 +96,7 @@ public class ProfileViewBean implements Serializable {
     
     public List<String> getCurrentPostLikes() {
         if (currImageIndex < 0) return null;
-        currentPostLikes = postLikeDAO.getCurrentPostLikes(currentUserPhotoPosts.get(currImageIndex).getId());
+        currentPostLikes = postLikeDAO.getCurrentPostLikes(currentUserNews.get(currImageIndex).getId());
         return currentPostLikes;
     }    
    
@@ -116,7 +105,7 @@ public class ProfileViewBean implements Serializable {
             return;        
         try {
             String author = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
-            Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();        
+            Integer postID = currentUserNews.get(currImageIndex).getId();        
             if (currentPostLikes.contains(author)) {
                 postLikeDAO.removeLike(author, postID);
             }
@@ -158,8 +147,8 @@ public class ProfileViewBean implements Serializable {
     private static List<Comment> currentPostComments;
     
     public List<Comment> getCurrentPostComments() {
-        if (currImageIndex < 0) return null;
-        currentPostComments = commentDAO.getCurrentPostComments(currentUserPhotoPosts.get(currImageIndex).getId());
+        if (currImageIndex < 0 || currImageIndex >= currentUserNews.size()) return null;
+        currentPostComments = commentDAO.getCurrentPostComments(currentUserNews.get(currImageIndex).getId());
         renderComments1 = true;
         getCurrentPostLikes();
         RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
@@ -167,14 +156,14 @@ public class ProfileViewBean implements Serializable {
     }    
 
     public String currentPostText() {
-        if (currImageIndex < 0 || currImageIndex >= currentUserPhotoPosts.size()) return "";
-        return currentUserPhotoPosts.get(currImageIndex).getText();
+        if (currImageIndex < 0 || currImageIndex >= currentUserNews.size()) return "";
+        return currentUserNews.get(currImageIndex).getText();
     }
     
     public String currentPostLocation() {
-        if (currImageIndex < 0 || currImageIndex >= currentUserPhotoPosts.size() || currentUserPhotoPosts.get(currImageIndex).getLocation() == null) 
+        if (currImageIndex < 0 || currImageIndex >= currentUserNews.size() || currentUserNews.get(currImageIndex).getLocation() == null) 
             return " ";
-        return currentUserPhotoPosts.get(currImageIndex).getLocation();
+        return currentUserNews.get(currImageIndex).getLocation();
     }
     
     private static boolean renderComments = false;
@@ -184,7 +173,7 @@ public class ProfileViewBean implements Serializable {
     }
 
     public void setRenderComments(boolean renderComments) {
-        ProfileViewBean.renderComments = renderComments;
+        NewsBean.renderComments = renderComments;
     }
     
     private static boolean renderComments1 = false;
@@ -194,7 +183,7 @@ public class ProfileViewBean implements Serializable {
     }
 
     public void setRenderComments1(boolean renderComments1) {
-        ProfileViewBean.renderComments1 = renderComments1;
+        NewsBean.renderComments1 = renderComments1;
     }
     
     private String text;
@@ -211,7 +200,7 @@ public class ProfileViewBean implements Serializable {
         
         try {
             String author = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
-            Integer postID = currentUserPhotoPosts.get(currImageIndex).getId();
+            Integer postID = currentUserNews.get(currImageIndex).getId();
             commentDAO.createComment(author, postID, text);
             List<Comment> f = getCurrentPostComments();
             List<String> g = getCurrentPostLikes();
@@ -237,86 +226,6 @@ public class ProfileViewBean implements Serializable {
         if (currentPostComments == null)
             return 0;
         return currentPostComments.size();
-    }
+    }    
     
-    //
-    
-    public void setCurrentImage(Integer id) {        
-        renderComments = true;
-        currImageIndex = -1;
-        for (int i = 0; i < currentUserPhotoPosts.size(); ++i) {
-            if (currentUserPhotoPosts.get(i).getId().intValue() == id.intValue()) {
-                currImageIndex = i;
-                break;
-            }
-        }
-        currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
-        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
-    }
-    
-    public void nextImage() {
-        ++currImageIndex;
-        currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
-        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
-    }
-    
-    public void prevImage() {
-        --currImageIndex;
-        currSrc = currentUserPhotoPosts.get(currImageIndex).getSrc();
-        RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
-    }
-    
-    public String nextImageAvailable() {
-        String st = "position: fixed; right: 5%; height: 40px; width: 40px; font: 8pt grey; top: 0; bottom: 0; margin-top: auto; margin-bottom: auto; padding: 0;";
-        return (currImageIndex == currentUserPhotoPosts.size() - 1 ? "display: none;" + st : "display: block;" + st);
-    }
-    
-    public String prevImageAvailable() {
-        String st = "position: fixed; left: 5%; height: 40px; width: 40px; font: 8pt grey; top: 0; bottom: 0; margin-top: auto; margin-bottom: auto; padding: 0;";
-        return (currImageIndex == 0 ? "display: none;"+ st : "display: block;"+ st);
-    }
-    
-    
-    // followers
-    
-    @EJB
-    private FollowerDAO followerDAO;
-    
-    public String followable() {
-        return (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username").equals(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")) ? "display: none;" : "display: block;");
-    }
-    
-    public int followingsCount() {
-        String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
-        return followerDAO.getUserFollowings(who).size();
-    }
-    
-    public int followersCount() {
-        String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
-        return followerDAO.getUserFollowers(whom).size();
-    }
-    
-    public void followUnfollow() {
-        String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
-        String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
-        followerDAO.followUnfollow(who, whom);
-    }
-    
-    public String followState() {
-        String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
-        String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
-        return (followerDAO.isFollowing(who, whom) ? "do not follow" : "follow");
-    }
-    
-    
-    // media
-    
-    public String forImage(String filename) {
-        return (filename.contains(".mp4") ? "display: none;" : "display: block;");
-    }
-    
-    public String forVideo(String filename) {
-        return (filename.contains(".mp4") ? "display: block;" : "display: none;");
-    }
-
 }

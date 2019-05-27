@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "User")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.changePassword", query = "UPDATE User u SET u.password = :password WHERE u.username = :username")
     , @NamedQuery(name = "User.findLike", query = "SELECT u.username FROM User u WHERE u.username LIKE :name")
     , @NamedQuery(name = "User.findAllUsernames", query = "SELECT u.username FROM User u")
     , @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")

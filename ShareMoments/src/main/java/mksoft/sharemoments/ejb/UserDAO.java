@@ -36,7 +36,7 @@ public class UserDAO {
         return 0;
     }
 
-    public boolean createUser(String username, String password, String name, String location, String bio) {
+    public boolean createUser(String username, String password, String name, String bio) {
         
         User user = entityManager.find(User.class, username);
         if(user != null){
@@ -49,7 +49,6 @@ public class UserDAO {
         
         UserData userData = new UserData(username);
         userData.setName(name);
-        userData.setLocation(location);
         userData.setBio(bio);
         entityManager.persist(userData);
         
@@ -65,6 +64,33 @@ public class UserDAO {
         Query query = entityManager.createNamedQuery("UserData.changeAvatar").setParameter("avatar", avatarSrc).setParameter("username", user.getUsername());
         query.executeUpdate();
     }
+    
+    public void changeInfo(String name, String bio) {
+        
+        User user = (User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+        UserData userData = entityManager.find(UserData.class, user.getUsername());
+        if (userData == null)
+            return;
+        Query query = entityManager.createNamedQuery("UserData.changeInfo");
+        query.setParameter("username", user.getUsername());
+        query.setParameter("name", name);
+        query.setParameter("bio", bio);
+        query.executeUpdate();
+    }
+    
+    public void changePassword(String password) {
+        
+        User user = (User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username");
+        UserData userData = entityManager.find(UserData.class, user.getUsername());
+        if (userData == null)
+            return;
+        Query query = entityManager.createNamedQuery("UserData.changePssword");
+        query.setParameter("username", user.getUsername());
+        query.setParameter("password", password);
+        query.executeUpdate();
+    }
+    
+    //
 
     public List<User> getAllUsers() {        
         Query query = entityManager.createNamedQuery("User.findAll");

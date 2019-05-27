@@ -7,8 +7,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
@@ -30,9 +35,9 @@ import org.primefaces.model.UploadedFile;
  *
  * @author mk99
  */
-@ManagedBean(name = "createPostBean", eager = true)
+@ManagedBean(name = "mediaServiceBean", eager = true)
 @SessionScoped
-public class CreatePostBean implements Serializable {
+public class MediaServiceBean implements Serializable {
     
     private String filename, tempFilename;
     private UploadedFile file;
@@ -49,7 +54,7 @@ public class CreatePostBean implements Serializable {
         try {
             file = event.getFile();
             tempFilename = file.getFileName();
-            System.out.println("temp filename: " + tempFilename);
+            //System.out.println("temp filename: " + tempFilename);
             copyFile(tempDestination + tempFilename, file.getInputstream());
         }
         catch (IOException e) {
@@ -62,7 +67,7 @@ public class CreatePostBean implements Serializable {
         try {
             String username = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
             filename = username + "_" + String.valueOf(new Date().getTime()) + tempFilename.substring(tempFilename.lastIndexOf('.'));
-            System.out.println("filename: " + filename);
+            //System.out.println("filename: " + filename);
             copyFile(destination + filename, file.getInputstream());
             photoPostDAO.createPost(filename, postDescription);
         }
@@ -180,6 +185,8 @@ public class CreatePostBean implements Serializable {
             copyFile(avatarDestination + avatarFilename, avatarFile.getInputstream());
             userDAO.changeAvatar(avatarFilename);
             User user = userDAO.userObject(username);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("username");
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("currViewUser");
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("username", user);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("currViewUser", user);
             RequestContext.getCurrentInstance().update(":avatar");
@@ -188,6 +195,36 @@ public class CreatePostBean implements Serializable {
         catch (IOException e) {
             e.getMessage();
         }
+    }
+    
+    // location for post
+    
+    private String location;
+    
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+    
+    private List<String> locations;
+
+    public List<String> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<String> locations) {
+        this.locations = locations;
+    }
+    
+    @PostConstruct
+    public void init() {
+        locations  = new ArrayList<>();
+        locations.add("Belarus, Minsk");
+        locations.add("Germany, Berlin");
+        locations.add("USA, New York");
     }
     
 }

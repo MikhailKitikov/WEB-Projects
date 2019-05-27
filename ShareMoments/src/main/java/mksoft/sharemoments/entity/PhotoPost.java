@@ -1,10 +1,8 @@
 package mksoft.sharemoments.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,14 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,22 +27,18 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "PhotoPost")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PhotoPost.findAll", query = "SELECT p FROM PhotoPost p ORDER BY p.date DESC")
+    @NamedQuery(name = "PhotoPost.findAll", query = "SELECT p FROM PhotoPost p")
     , @NamedQuery(name = "PhotoPost.findById", query = "SELECT p FROM PhotoPost p WHERE p.id = :id")
     , @NamedQuery(name = "PhotoPost.findBySrc", query = "SELECT p FROM PhotoPost p WHERE p.src = :src")
-    , @NamedQuery(name = "PhotoPost.findByUsername", query = "SELECT p FROM PhotoPost p WHERE p.username = :username")
-    , @NamedQuery(name = "PhotoPost.findByText", query = "SELECT p FROM PhotoPost p WHERE p.text = :text")})
-public class PhotoPost implements Serializable {
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postID")
-    private Collection<PostLike> postLikeCollection;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postID")
-    private Collection<Comment> commentCollection;
+    , @NamedQuery(name = "PhotoPost.findByText", query = "SELECT p FROM PhotoPost p WHERE p.text = :text")
+    , @NamedQuery(name = "PhotoPost.findByDate", query = "SELECT p FROM PhotoPost p WHERE p.date = :date")
+    , @NamedQuery(name = "PhotoPost.findByLocation", query = "SELECT p FROM PhotoPost p WHERE p.location = :location"),
+    @NamedQuery(name = "PhotoPost.findByUsername", query = "SELECT p FROM PhotoPost p WHERE p.username = :username")})
+public class PhotoPost implements Serializable, Comparable<Object> {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
@@ -58,14 +50,17 @@ public class PhotoPost implements Serializable {
     @Size(max = 255)
     @Column(name = "text")
     private String text;
-    @JoinColumn(name = "username", referencedColumnName = "username")
-    @ManyToOne(optional = false)
-    private User username;
     @Basic(optional = false)
     @NotNull
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+    @Size(max = 60)
+    @Column(name = "location")
+    private String location;
+    @JoinColumn(name = "username", referencedColumnName = "username")
+    @ManyToOne(optional = false)
+    private User username;
 
     public PhotoPost() {
     }
@@ -74,9 +69,10 @@ public class PhotoPost implements Serializable {
         this.id = id;
     }
 
-    public PhotoPost(Integer id, String src) {
+    public PhotoPost(Integer id, String src, Date date) {
         this.id = id;
         this.src = src;
+        this.date = date;
     }
 
     public Integer getId() {
@@ -103,20 +99,28 @@ public class PhotoPost implements Serializable {
         this.text = text;
     }
 
-    public User getUsername() {
-        return username;
-    }
-
-    public void setUsername(User username) {
-        this.username = username;
-    }
-    
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public User getUsername() {
+        return username;
+    }
+
+    public void setUsername(User username) {
+        this.username = username;
     }
 
     @Override
@@ -138,28 +142,15 @@ public class PhotoPost implements Serializable {
         }
         return true;
     }
+    
+    @Override
+    public int compareTo(Object object) {
+        return -(int) (this.getDate().getTime() - ((PhotoPost)object).getDate().getTime());
+    }
 
     @Override
     public String toString() {
-        return "post" + id;
-    }
-
-    @XmlTransient
-    public Collection<Comment> getCommentCollection() {
-        return commentCollection;
-    }
-
-    public void setCommentCollection(Collection<Comment> commentCollection) {
-        this.commentCollection = commentCollection;
-    }
-
-    @XmlTransient
-    public Collection<PostLike> getPostLikeCollection() {
-        return postLikeCollection;
-    }
-
-    public void setPostLikeCollection(Collection<PostLike> postLikeCollection) {
-        this.postLikeCollection = postLikeCollection;
+        return "mksoft.sharemoments.entity.PhotoPost[ id=" + id + " ]";
     }
     
 }

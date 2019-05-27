@@ -21,26 +21,20 @@
             <p:panel styleClass="login_color_scheme" class="gradient-border-element">
 
                 <h:panelGrid columns="2" cellpadding="5">                    
-                    <p:outputLabel for="login" value="Login: "/>
-                    <p:inputText id="login" value="#{regBean.username}" required="true"/> 
+                    <p:outputLabel for="username" value="Username: "/>
+                    <p:inputText id="username" value="#{regBean.username}" required="true" autocomplete="false"/> 
 
                     <p:outputLabel for="password" value="Password: "/>
-                    <p:password id="password" value="#{regBean.password}" required="true"/>     
+                    <p:password id="password" value="#{regBean.password}" required="true" autocomplete="false"/>     
 
                     <p:outputLabel for="confirm_password" value="Confirm password: "/>
                     <p:password id="confirm_password" value="#{regBean.confirmPassword}" required="true"/> 
                     
                     <p:outputLabel for="name" value="Name: "/>
-                    <p:inputText id="name" value="#{regBean.name}" required="true"/> 
-                    
-                    <p:outputLabel for="location" value="Location: "/>
-                    <p:selectOneMenu id="location" value="#{regBean.location}" style="width:150px">
-                        <f:selectItem itemLabel="Select location" itemValue="" noSelectionOption="false" />
-                        <f:selectItems value="#{regBean.locations}" />
-                    </p:selectOneMenu>
+                    <p:inputText id="name" value="#{regBean.name}" required="false"/> 
                     
                     <p:outputLabel for="bio" value="Bio: "/>
-                    <p:inputText id="bio" value="#{regBean.bio}" required="true"/>  
+                    <p:inputText id="bio" value="#{regBean.bio}" required="false"/>  
                 </h:panelGrid>
                    <br/>
                 <p:commandButton id="submit" value="Sign up" action="#{regBean.register()}" update="@form" style="width: 100%; background-color: white;"/> 

@@ -5,12 +5,15 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 import javax.faces.context.FacesContext;
+import mksoft.sharemoments.entity.Follower;
 import mksoft.sharemoments.entity.PhotoPost;
 import mksoft.sharemoments.entity.User;
 
@@ -39,6 +42,21 @@ public class PhotoPostDAO {
         FacesContext facesContext = FacesContext.getCurrentInstance();   
         Query query = entityManager.createNamedQuery("PhotoPost.findByUsername").setParameter("username", (User)facesContext.getExternalContext().getSessionMap().get("currViewUser"));
         return query.getResultList();
+    }
+    
+    public List<PhotoPost> getCurrentUserNews() {    
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        String username = ((User)facesContext.getExternalContext().getSessionMap().get("username")).getUsername();
+        
+        List<PhotoPost> res = new ArrayList<>();
+        Query follower_query = entityManager.createNamedQuery("Follower.findByWhoName").setParameter("whoName", username);
+        for (Object friend : follower_query.getResultList()) {
+            Query post_query = entityManager.createNamedQuery("PhotoPost.findByUsername").setParameter("username", new User(((Follower)friend).getWhomName()));
+            res.addAll(post_query.getResultList());
+        }        
+        Collections.sort(res);
+        return res;
     }
     
     public List<PhotoPost> getAllPhotoPosts() {    

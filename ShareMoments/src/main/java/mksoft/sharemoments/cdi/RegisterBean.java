@@ -26,7 +26,6 @@ public class RegisterBean implements Serializable {
     private String password;
     private String confirmPassword;
     private String name;
-    private String location;
     private String bio;
     
     private boolean registerSuccess;  
@@ -40,7 +39,7 @@ public class RegisterBean implements Serializable {
             registerSuccess = false;
             return "registration";
         } 
-        if (!userDAO.createUser(username, password, name, location, bio)) {
+        if (!userDAO.createUser(username, password, name, bio)) {
             registerSuccess = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User already exists"));
             return "registration";
@@ -55,17 +54,18 @@ public class RegisterBean implements Serializable {
     }
     
     public boolean validateInput() {
-        
-//        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(confirmPassword)) {
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid input"));
-//            return false;
-//        }
+        if (username == null || password == null || confirmPassword == null ||
+                StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(confirmPassword)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Invalid input"));
+            return false;
+        }
         if (!password.equals(confirmPassword)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Passwords do not match"));
             return false;
         }
         return true;
     }
+    
     
     //
     
@@ -108,15 +108,7 @@ public class RegisterBean implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
+    
     public String getBio() {
         return bio;
     }
@@ -127,25 +119,4 @@ public class RegisterBean implements Serializable {
     
     public RegisterBean() {
     }
-    
-    // locations
-    
-    private Map<String,String> locations;
-     
-    @PostConstruct
-    public void init() {
-        locations  = new HashMap<>();
-        locations.put("Belarus, Minsk", "Belarus, Minsk");
-        locations.put("Germany, Berlin", "Germany, Berlin");
-        locations.put("USA, New York", "USA, New York");
-    }
-
-    public Map<String, String> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(Map<String, String> locations) {
-        this.locations = locations;
-    }
-
 }
