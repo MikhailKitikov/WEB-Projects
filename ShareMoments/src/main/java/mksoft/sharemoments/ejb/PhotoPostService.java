@@ -22,7 +22,7 @@ import mksoft.sharemoments.entity.User;
  * @author mk99
  */
 @Stateless
-public class PhotoPostDAO {
+public class PhotoPostService {
 
    @PersistenceContext(unitName = "profiles_persist")
     private EntityManager entityManager;

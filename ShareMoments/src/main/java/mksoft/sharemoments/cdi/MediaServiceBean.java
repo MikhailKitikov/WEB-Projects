@@ -22,14 +22,15 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import mksoft.sharemoments.ejb.PhotoPostDAO;
-import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.ejb.PhotoPostService;
+import mksoft.sharemoments.ejb.UserService;
 import mksoft.sharemoments.entity.User;
 import mksoft.sharemoments.entity.UserData;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+
 
 /**
  *
@@ -47,14 +48,13 @@ public class MediaServiceBean implements Serializable {
             avatarDestination = "/home/mk99/web/data/images/avatars/";    
     
     @EJB
-    private PhotoPostDAO photoPostDAO;
+    private PhotoPostService photoPostDAO;
  
     public void upload(FileUploadEvent event) {     
         
         try {
             file = event.getFile();
             tempFilename = file.getFileName();
-            //System.out.println("temp filename: " + tempFilename);
             copyFile(tempDestination + tempFilename, file.getInputstream());
         }
         catch (IOException e) {
@@ -67,9 +67,11 @@ public class MediaServiceBean implements Serializable {
         try {
             String username = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
             filename = username + "_" + String.valueOf(new Date().getTime()) + tempFilename.substring(tempFilename.lastIndexOf('.'));
-            //System.out.println("filename: " + filename);
             copyFile(destination + filename, file.getInputstream());
             photoPostDAO.createPost(filename, postDescription);
+            
+            File old_file = new File(tempDestination + tempFilename); 
+            old_file.delete();
         }
         catch (IOException e) {
             e.getMessage();
@@ -147,7 +149,7 @@ public class MediaServiceBean implements Serializable {
     // avatar
     
     @EJB
-    private UserDAO userDAO;
+    private UserService userDAO;
     
     public boolean toUpdate = false;
 

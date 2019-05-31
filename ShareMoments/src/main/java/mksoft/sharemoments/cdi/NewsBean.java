@@ -10,11 +10,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import mksoft.sharemoments.ejb.CommentDAO;
-import mksoft.sharemoments.ejb.FollowerDAO;
-import mksoft.sharemoments.ejb.PhotoPostDAO;
-import mksoft.sharemoments.ejb.PostLikeDAO;
+import mksoft.sharemoments.ejb.CommentService;
+import mksoft.sharemoments.ejb.EventService;
+import mksoft.sharemoments.ejb.FollowerService;
+import mksoft.sharemoments.ejb.PhotoPostService;
+import mksoft.sharemoments.ejb.PostLikeService;
 import mksoft.sharemoments.entity.Comment;
+import mksoft.sharemoments.entity.Event;
 import mksoft.sharemoments.entity.PhotoPost;
 import mksoft.sharemoments.entity.User;
 import mksoft.sharemoments.entity.UserData;
@@ -43,7 +45,7 @@ public class NewsBean implements Serializable {
     // photoposts
     
     @EJB
-    private PhotoPostDAO photoPostDAO;
+    private PhotoPostService photoPostDAO;
     
     private static String currSrc;
 
@@ -90,7 +92,7 @@ public class NewsBean implements Serializable {
     // likes
     
     @EJB
-    private PostLikeDAO postLikeDAO;
+    private PostLikeService postLikeDAO;
     
     private static List<String> currentPostLikes;
     
@@ -111,6 +113,7 @@ public class NewsBean implements Serializable {
             }
             else {
                 postLikeDAO.addLike(author, postID);
+                eventDAO.createEvent(currentUserNews.get(currImageIndex).getUsername().getUsername(), "on_like", postID);
             }            
             RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
         }
@@ -142,7 +145,7 @@ public class NewsBean implements Serializable {
     // comments
     
     @EJB
-    private CommentDAO commentDAO;
+    private CommentService commentDAO;
     
     private static List<Comment> currentPostComments;
     
@@ -227,5 +230,33 @@ public class NewsBean implements Serializable {
             return 0;
         return currentPostComments.size();
     }    
+    
+    
+    // media
+    
+    public String forImage(String filename) {
+        return (filename.contains(".mp4") ? "display: none;" : "display: block;");
+    }
+    
+    public String forVideo(String filename) {
+        return (filename.contains(".mp4") ? "display: block;" : "display: none;");
+    }
+    
+    public String preview(String filename) {
+        return (filename.contains(".mp4") ? "video_preview.jpeg" : filename);
+    }
+    
+    
+    // events
+    
+    @EJB
+    private EventService eventDAO;
+    
+    private List<Event> eventList;
+
+    public List<Event> getEventList() {
+        eventList = eventDAO.getCurrentUserEvents();
+        return eventList;
+    } 
     
 }

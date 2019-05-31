@@ -11,7 +11,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.ejb.UserService;
 import mksoft.sharemoments.entity.User;
 import org.primefaces.event.SelectEvent;
 
@@ -24,7 +24,7 @@ import org.primefaces.event.SelectEvent;
 public class SearchBean implements Serializable {
     
     @EJB
-    private UserDAO userDAO;
+    private UserService userDAO;
 
     private String username; 
 

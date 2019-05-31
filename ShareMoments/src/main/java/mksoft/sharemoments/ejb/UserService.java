@@ -15,7 +15,7 @@ import mksoft.sharemoments.entity.User;
 import mksoft.sharemoments.entity.UserData;
 
 @Stateless
-public class UserDAO {
+public class UserService {
 
     @PersistenceContext(unitName = "profiles_persist")
     private EntityManager entityManager;
@@ -108,7 +108,10 @@ public class UserDAO {
     }
     
     public User userObject(String username) {
-        return entityManager.find(User.class, username);       
+        UserData ud = entityManager.find(UserData.class, username); 
+        User user = entityManager.find(User.class, username);
+        user.setUserData(ud);
+        return user;      
     }
 }
     

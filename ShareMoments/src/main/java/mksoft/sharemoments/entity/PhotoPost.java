@@ -1,6 +1,7 @@
 package mksoft.sharemoments.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -12,12 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,6 +38,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "PhotoPost.findByLocation", query = "SELECT p FROM PhotoPost p WHERE p.location = :location"),
     @NamedQuery(name = "PhotoPost.findByUsername", query = "SELECT p FROM PhotoPost p WHERE p.username = :username")})
 public class PhotoPost implements Serializable, Comparable<Object> {
+
+    @OneToMany(mappedBy = "postID")
+    private Collection<Event> eventCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -151,6 +157,15 @@ public class PhotoPost implements Serializable, Comparable<Object> {
     @Override
     public String toString() {
         return "mksoft.sharemoments.entity.PhotoPost[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Event> getEventCollection() {
+        return eventCollection;
+    }
+
+    public void setEventCollection(Collection<Event> eventCollection) {
+        this.eventCollection = eventCollection;
     }
     
 }

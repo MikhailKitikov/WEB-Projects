@@ -12,7 +12,7 @@ import mksoft.sharemoments.entity.Follower;
  * @author mk99
  */
 @Stateless
-public class FollowerDAO {
+public class FollowerService {
 
    @PersistenceContext(unitName = "profiles_persist")
     private EntityManager entityManager;
@@ -22,16 +22,17 @@ public class FollowerDAO {
         return query.getResultList().size() == 1;
     }
     
-    public void followUnfollow(String who, String whom) {
+    public boolean followUnfollow(String who, String whom) {
         if (isFollowing(who, whom)) {
             Query query = entityManager.createNamedQuery("Follower.remove").setParameter("whoname", who).setParameter("whomname", whom);
             query.executeUpdate();
-            return;
+            return false;
         }
         Follower follower = new Follower();
         follower.setWhoName(who);
         follower.setWhomName(whom);
         entityManager.persist(follower);
+        return true;
     }   
 
     public List<Follower> getUserFollowers(String username){              

@@ -9,7 +9,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import mksoft.sharemoments.entity.User;
-import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.ejb.UserService;
 import mksoft.sharemoments.entity.UserData;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,7 +27,7 @@ public class LoginBean implements Serializable {
     private boolean loginSuccess;
 
     @EJB
-    private UserDAO userDAO;
+    private UserService userDAO;
 
     public String login() {        
         if (!validateInput()) {

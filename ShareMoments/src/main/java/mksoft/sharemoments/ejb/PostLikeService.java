@@ -21,7 +21,7 @@ import mksoft.sharemoments.entity.User;
  * @author mk99
  */
 @Stateless
-public class PostLikeDAO {
+public class PostLikeService {
 
    @PersistenceContext(unitName = "profiles_persist")
     private EntityManager entityManager;

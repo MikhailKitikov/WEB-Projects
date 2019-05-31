@@ -10,7 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import mksoft.sharemoments.ejb.UserDAO;
+import mksoft.sharemoments.ejb.UserService;
 import mksoft.sharemoments.entity.User;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,7 +28,7 @@ public class AlterInfoBean implements Serializable {
     private String bio;
     
     @EJB
-    private UserDAO userDAO;
+    private UserService userDAO;
     
     //
 

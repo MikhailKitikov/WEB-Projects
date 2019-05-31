@@ -10,11 +10,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import mksoft.sharemoments.ejb.CommentDAO;
-import mksoft.sharemoments.ejb.FollowerDAO;
-import mksoft.sharemoments.ejb.PhotoPostDAO;
-import mksoft.sharemoments.ejb.PostLikeDAO;
+import mksoft.sharemoments.ejb.CommentService;
+import mksoft.sharemoments.ejb.EventService;
+import mksoft.sharemoments.ejb.FollowerService;
+import mksoft.sharemoments.ejb.PhotoPostService;
+import mksoft.sharemoments.ejb.PostLikeService;
 import mksoft.sharemoments.entity.Comment;
+import mksoft.sharemoments.entity.Event;
 import mksoft.sharemoments.entity.PhotoPost;
 import mksoft.sharemoments.entity.User;
 import mksoft.sharemoments.entity.UserData;
@@ -64,7 +66,7 @@ public class ProfileViewBean implements Serializable {
     // photoposts
     
     @EJB
-    private PhotoPostDAO photoPostDAO;
+    private PhotoPostService photoPostDAO;
     
     private static String currSrc;
 
@@ -101,7 +103,7 @@ public class ProfileViewBean implements Serializable {
     // likes
     
     @EJB
-    private PostLikeDAO postLikeDAO;
+    private PostLikeService postLikeDAO;
     
     private static List<String> currentPostLikes;
     
@@ -122,6 +124,7 @@ public class ProfileViewBean implements Serializable {
             }
             else {
                 postLikeDAO.addLike(author, postID);
+                eventDAO.createEvent(currentUserPhotoPosts.get(currImageIndex).getUsername().getUsername(), "on_like", postID);
             }            
             RequestContext.getCurrentInstance().update("commentsFormID:like-comment-label");
         }
@@ -153,12 +156,12 @@ public class ProfileViewBean implements Serializable {
     // comments
     
     @EJB
-    private CommentDAO commentDAO;
+    private CommentService commentDAO;
     
     private static List<Comment> currentPostComments;
     
     public List<Comment> getCurrentPostComments() {
-        if (currImageIndex < 0) return null;
+        if (currImageIndex < 0 || !renderComments || currentUserPhotoPosts == null || currImageIndex >= currentUserPhotoPosts.size()) return null;
         currentPostComments = commentDAO.getCurrentPostComments(currentUserPhotoPosts.get(currImageIndex).getId());
         renderComments1 = true;
         getCurrentPostLikes();
@@ -280,7 +283,7 @@ public class ProfileViewBean implements Serializable {
     // followers
     
     @EJB
-    private FollowerDAO followerDAO;
+    private FollowerService followerDAO;
     
     public String followable() {
         return (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username").equals(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")) ? "display: none;" : "display: block;");
@@ -299,7 +302,8 @@ public class ProfileViewBean implements Serializable {
     public void followUnfollow() {
         String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
         String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
-        followerDAO.followUnfollow(who, whom);
+        if (followerDAO.followUnfollow(who, whom))
+            eventDAO.createEvent(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername(), "on_follow", 72);
     }
     
     public String followState() {
@@ -317,6 +321,32 @@ public class ProfileViewBean implements Serializable {
     
     public String forVideo(String filename) {
         return (filename.contains(".mp4") ? "display: block;" : "display: none;");
+    }
+    
+    public String preview(String filename) {
+        return (filename.contains(".mp4") ? "video_preview.jpeg" : filename);
+    }
+    
+    
+    // events
+    
+    @EJB
+    private EventService eventDAO;
+    
+    private List<Event> eventList;
+
+    public List<Event> getEventList() {
+        eventList = eventDAO.getCurrentUserEvents();
+        return eventList;
+    }    
+    
+    public String forEvent(Event event) {
+        if (event.getEventType().equals("on_follow")) {
+            return "display: none;";
+        }
+        else {
+            return "display: inline;";
+        }
     }
 
 }

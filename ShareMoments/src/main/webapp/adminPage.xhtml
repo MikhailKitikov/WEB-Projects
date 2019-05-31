@@ -4,25 +4,16 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Authorization result</title>
+        <title>Hello, Admin!</title>
         <h:outputStylesheet library="css" name="styles.css"/>
     </h:head>
-    <h:body style="background-image: url('resources/images/mainbg.jpg'); background-size: 1000px auto;background-repeat: no-repeat">
+    <h:body class="gbody">
+        
         <p:panel styleClass="login_color_scheme" style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;">
-            <h:form class="authorization_result" >            
-                <h:outputText value="#{logBean.showResult()}"/>
-                <br/><br/>
-
-                <h:outputLabel for="retry">
-                    <h:outputText value="Try again"/>
-                </h:outputLabel>
-                <br/><br/>            
-                <h:commandButton id="retry" value="retry" action="index?faces-redirect=true"/>
-
-<!--                <h:commandButton id="viewUsersButton" value="View users" action="user?faces-redirect=true" />-->
-
-                <h:commandButton id="wallButton" value="View profile" action="profilePage?faces-redirect=true" />
+            <h:form>
+                <h:outputText value="Page is under construction"/>
             </h:form>
-        </p:panel>        
+        </p:panel>     
+        
     </h:body>
 </html>

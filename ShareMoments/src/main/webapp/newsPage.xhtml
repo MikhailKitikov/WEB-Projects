@@ -11,7 +11,6 @@
         <h:outputStylesheet library="css" name="styles.css" />
         <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet"/>
-        <h:outputScript library='js' name='gallery.js'/>
         <h:outputScript library='js' name='funcs.js'/>
     </h:head>
     <h:body class="gbody">
@@ -23,13 +22,13 @@
             <p:menubar class='main-menu'>
                 <p:menuitem>
                     <h:link outcome="index.xhtml?faces-redirect=true">
-                        <h:graphicImage library="images" name="logo.png" height="30" width='30'/>
+                        <h:graphicImage value="images/logo.png" height="30" width='30'/>
                     </h:link>
                 </p:menuitem>
                 <p:menuitem value="           " disabled="true"/>
                 <p:menuitem value="Home" action="#{searchBean.goHome()}"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="Events" url="#"/>
+                <p:menuitem value="Events" onclick="showWindow('event-window');"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="News" url="newsPage.xhtml?faces-redirect=true"/>
                 <p:menuitem value="     |      " disabled="true"/>
@@ -117,10 +116,25 @@
             
         </p:panelGrid>
         
+        <!--events-->
+        
+        <p:panel id="event-window">
+            <center>
+                <p:dataTable id="eventDataTableID" var="event" value="#{profileViewBean.eventList}" scrollable="true" scrollHeight="400">
+                    <p:column>
+                        <h:graphicImage value="images/avatars/#{event.author.userData.avatar}" style="margin-right: 30px; width: 40px; height: 40px; -webkit-clip-path: circle(50%);"/>
+                        <h:outputText value="#{event.toString()}"/>
+                        <h:graphicImage value="images/#{event.postID.src}" style="width: 40px; margin-left: 30px; height: 40px; #{profileViewBean.forEvent(event)}"/>
+                    </p:column>
+                </p:dataTable>
+            </center>            
+        </p:panel>
+        
         
         <!--other-->
         
         <div id="smallWindow-mask" class="mask" onclick="hideWindow('smallWindow'); return false;" />
+        <div id="event-window-mask" class="mask" onclick="hideWindow('event-window'); #{createPostBean.toReload()}" />
 
         <p:panel class="footer">
             <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>
