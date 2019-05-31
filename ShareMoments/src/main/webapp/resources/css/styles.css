@@ -163,7 +163,29 @@ td {
 #event-window {
     position: fixed;
     height: 400px;
-    width: 800px;
+    width: 500px;
+    left: 0; right: 0; margin-left: auto; margin-right: auto;
+    top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
+    border: 0;
+    display: none;
+    z-index: 4000;
+}
+
+#followers-list-window {
+    position: fixed;
+    height: 400px;
+    width: 300px;
+    left: 0; right: 0; margin-left: auto; margin-right: auto;
+    top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
+    border: 0;
+    display: none;
+    z-index: 4000;
+}
+
+#followings-list-window {
+    position: fixed;
+    height: 400px;
+    width: 300px;
     left: 0; right: 0; margin-left: auto; margin-right: auto;
     top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
     border: 0;
@@ -320,4 +342,40 @@ td {
 .borderless .ui-widget-content .ui-state-default,
 .borderless .ui-widget-header .ui-state-default {
     border: none;
+}
+
+.comment-button {
+    background-image: url("#{resource['images/icons/comment.png']}") !important;
+    background-size: 20px;
+    height: 20px !important;
+    width: 20px !important;
+    margin: auto !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
+
+.like-button {
+    background-image: url("#{resource['images/icons/like.png']}") !important;
+    background-size: 20px;
+    height: 20px !important;
+    width: 20px !important;
+    margin: auto !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
+
+.dislike-button {
+    background-image: url("#{resource['images/icons/dislike.png']}") !important;
+    background-size: 20px;
+    height: 20px !important;
+    width: 20px !important;
+    margin: auto !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
 }

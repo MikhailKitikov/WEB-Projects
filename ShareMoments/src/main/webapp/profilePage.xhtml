@@ -8,6 +8,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>#{profileViewBean.showUsername()}</title>
+        <!--<meta http-equiv="pragma" content="no-cache" />-->
         <h:outputStylesheet library="css" name="styles.css" />
         <h:outputStylesheet library="css" name="uploadStyle.css" />
         <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet"/>
@@ -36,7 +37,7 @@
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Add post" onclick="#{filter.f()} showWindow('create-post-window');"/>
                 <p:menuitem value="     |      " disabled="true"/>
-                <p:menuitem value="Settings" onclick="showWindow('alter-info-window');" action="#{alterInfoBean.preload()}"/>
+                <p:menuitem value="Settings" update=":alter-info-window" oncomplete="showWindow('alter-info-window'); return false;"/>
                 <p:menuitem value="     |      " disabled="true"/>
                 <p:menuitem value="Quit" action="#{logBean.logout()}"/>
                 <f:facet name='options'>
@@ -67,8 +68,11 @@
                             onclick="#{filter.f()} showWindow('change-avatar-window');"
                         />
                         <h:form style="font-size: 8pt;" id="followers-panel">
-                            <center> <p:outputLabel id="followers-label" style="color: grey; font-size: 8pt;" value="Followers: #{profileViewBean.followersCount()} | Follows: #{profileViewBean.followingsCount()}"/></center> 
-                            <center> <p:commandButton style="background-color: white; border: 0; font-size: 8pt; #{profileViewBean.followable()}" id="follow-button" value="#{profileViewBean.followState()}" action="#{profileViewBean.followUnfollow()}" update="followers-label, @this"/></center> 
+                            <center> 
+                                <p:outputLabel onclick="showWindow('followers-list-window');" id="followers-label" style="color: grey; font-size: 8pt;" value="Followers: #{profileViewBean.followersCount()} | "/>
+                                <p:outputLabel onclick="showWindow('followings-list-window');" id="followings-label" style="color: grey; font-size: 8pt;" value="Follows: #{profileViewBean.followingsCount()}"/>
+                                <p:commandButton style="background-color: white; border: 0; font-size: 8pt; #{profileViewBean.followable()}" id="follow-button" value="#{profileViewBean.followState()}" action="#{profileViewBean.followUnfollow()}" update="followers-label, @this"/>
+                            </center> 
                         </h:form>
                     </p:panelGrid>                  
                 </h:panelGroup>
@@ -132,30 +136,29 @@
             
             <p:panel id="commentsPanelID" style="height: 400px; width: 300px; margin: 0; padding: 0; padding-left: 10px; padding-right: 10px;">
                 <h:form id="commentsFormID" style="height: 200px !important;">
+                    <h:graphicImage url="#{resource['images/icons/location.png']}" style="width: 20px; height: 15px; margin-top: 5px;"/>
+                    <h:outputText style="max-height: 20px !important; max-width: 200px; font-size: 10pt; color: navy; margin-top: 10px;" rendered="#{profileViewBean.renderComments}" value="#{profileViewBean.currentPostLocation()}"/>
+                    <h:outputText style="max-height: 40px !important; max-width: 200px; font-size: 10pt; color: grey; margin: 10px;" styleClass="word-wrap-text" rendered="#{profileViewBean.renderComments}" value="#{profileViewBean.currentPostText()}"/>
                     
-                    <h:outputText style="max-height: 20px !important; max-width: 200px; font: 10pt blue; margin-top: 10px;" rendered="#{profileViewBean.renderComments}" value="#{profileViewBean.currentPostLocation()}"/>
-                    <h:outputText style="max-height: 50px !important; max-width: 200px; font: 10pt grey; margin-bottom: 10px;" styleClass="word-wrap-text" rendered="#{profileViewBean.renderComments}" value="#{profileViewBean.currentPostText()}"/>
-                    
-                    <h:panelGroup id="tablePG" style="height: 220px;">
-                        <p:dataTable styleClass="borderless" rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="220">
-                            <f:facet name='header'>
-                                <h:outputText value="Comments" style="font: 15pt; color: lightgrey;"/>                       
-                            </f:facet>
+                    <hr style="width: 300px; height: 0px; border-color: lightgrey; border-width: 0.5px;"/>
+                    <h:panelGroup id="tablePG" style="height: 200px;">                        
+                        <p:dataTable emptyMessage="no comments yet" styleClass="borderless" rendered="#{profileViewBean.renderComments}" id="commentDataTableID" var="comment" value="#{profileViewBean.currentPostComments}" scrollable="true" scrollHeight="200">
                             <p:column>
-                                <h:outputText style='font: 10pt grey;' value="#{comment.authorName}: "/>
-                                <h:outputText value="#{comment.text}" rendered="#{profileViewBean.renderComments}"/>
+                                <h:outputText style='font: 10pt grey; float: left; margin-right: 10px;' value="#{comment.authorName}: "/>
+                                <h:outputText style='float: left;' class="word-wrap-text" value="#{comment.text}" rendered="#{profileViewBean.renderComments}"/>
                             </p:column>
-                        </p:dataTable>
+                        </p:dataTable>                        
                     </h:panelGroup>
+                    <hr style="width: 300px; height: 0px; border-color: lightgrey; border-width: 0.5px;"/>
                     
-                    <p:panelGrid columns="2" style="width: 250px; margin-top: 10px;" rendered="#{profileViewBean.renderComments}">
-                        <p:commandButton style="background-color: white; border: 0; font-size: 10pt;" id="like-button" value="#{profileViewBean.likeState()}" action="#{profileViewBean.addLike()}" update="like-comment-label, @this"/>
+                    <p:panelGrid columns="2" style="width: 250px; margin-left: 20px; margin-top: 10px;" rendered="#{profileViewBean.renderComments}">
+                        <p:commandButton style="background-color: white; border: 0; font-size: 10pt; height: 20px; width: 20px;" id="like-button" icon="#{profileViewBean.likeState()}" action="#{profileViewBean.addLike()}" update="like-comment-label, @this"/>
                         <p:outputLabel id="like-comment-label" style="color: grey; font-size: 10pt;" value="Likes: #{profileViewBean.likesCount()} | Comments: #{profileViewBean.commentsCount()}"/>
                     </p:panelGrid>
                     
                     <p:panelGrid columns="2" style="width: 250px; height: auto; padding: 0; margin: 10px; margin-right: 10px; margin-bottom: 0;">
-                        <p:inputText value="#{profileViewBean.text}" style="width: 200px; height: 20px;"/>
-                        <p:commandButton style="background-color: white; border: 0; font-size: 10pt; margin-left: 10px; margin-left: 10px;" value="add" action="#{profileViewBean.createComment()}" update="commentDataTableID" oncomplete="showWindow('smallWindow');"/>
+                        <p:inputText id="comment-input" value="#{profileViewBean.text}" style="width: 200px; height: 20px;"/>
+                        <p:commandButton style="background-color: white; height: 20px; width: 20px; border: 0; font-size: 10pt; margin-left: 10px; margin-left: 10px;" icon="comment-button" action="#{profileViewBean.createComment()}" update="commentDataTableID" oncomplete="showWindow('smallWindow'); document.getElementById('commentsFormID:comment-input').value=''"/>
                     </p:panelGrid>
                     
                 </h:form>
@@ -190,15 +193,13 @@
                         <p:panelGrid columns="1">
                             <p:graphicImage url="images/#{mediaServiceBean.tempFilename}" style="width: 300px; height: 200px;"/>
                             <h:outputLabel value="Post description"/>
-                            <p:inputTextarea id="post-text-input" value="#{mediaServiceBean.postDescription}"/>                        
-                        </p:panelGrid>
+                            <p:inputTextarea autoResize="false" scrollHeight="40" id="post-text-input" value="#{mediaServiceBean.postDescription}"/>                        
+                            <p:autoComplete appendTo=":panpan" placeholder="Select location" id="location" value="#{mediaServiceBean.location}" completeMethod="#{mediaServiceBean.getLocations()}"/>                      
+                        </p:panelGrid>                  
                         
-                        <p:outputLabel for="location" value="Location: "/>
-                        <p:autoComplete appendTo=":panpan" placeholder="Select location" id="location" value="#{mediaServiceBean.location}" completeMethod="#{mediaServiceBean.getLocations()}" style="width:150px"/>
-                        
-                        <p:panelGrid columns="2" style="height: 30px;">
-                            <p:commandButton value="Create" action="#{mediaServiceBean.submit()}" update=":photo-gallery" oncomplete="hideWindow('create-post-window'); changeUploadState(0);"/>
-                            <p:commandButton value="Cancel" onclick="changeUploadState(0); hideWindow('create-post-window'); return false;"/>
+                        <p:panelGrid columns="2" style="height: 20px;">
+                            <p:commandButton style="background-color: white; border: 0;" value="Create" action="#{mediaServiceBean.submit()}" update=":photo-gallery" oncomplete="hideWindow('create-post-window'); changeUploadState(0);"/>
+                            <p:commandButton style="background-color: white; border: 0;" value="Cancel" onclick="changeUploadState(0); hideWindow('create-post-window'); return false;"/>
                         </p:panelGrid>  
                         
                     </h:form>
@@ -217,7 +218,7 @@
                         id="fileUpload-avatar"
                         mode="advanced"
                         fileUploadListener="#{mediaServiceBean.uploadAvatar}"
-                        sizeLimit="1000000"
+                        sizeLimit="10000000"
                         allowTypes="/(\.|\/)(gif|jpe?g)$/"
                         previewWidth="100"
                         dragDropSupport="true"
@@ -235,7 +236,7 @@
             <p:tabView id="alter-info-window">
                 <p:tab title="Change info">
                     <h:form class="login_form" id="alter-info-form">
-                        <p:growl id="growl" showDetail="true" sticky="false" life="2000"/>        
+                        <p:growl id="growl1" showDetail="true" sticky="false" life="2000"/>        
                         <p:panel id="alter-info-panel" styleClass="login_color_scheme" class="gradient-border-element">
                             <h:panelGrid columns="2" cellpadding="5">                    
                                 <p:outputLabel for="name" value="Name: "/>
@@ -249,6 +250,7 @@
                 </p:tab>
                 <p:tab title="Change password">
                     <h:form class="login_form" id="alter-pswrd-form">
+                        <p:growl id="growl2" showDetail="true" sticky="false" life="2000"/>
                         <p:panel id="alter-pswrd-panel" styleClass="login_color_scheme" class="gradient-border-element">
                             <h:panelGrid columns="2" cellpadding="5">      
                                 <p:outputLabel for="old_password" value="Old Password "/>
@@ -271,12 +273,57 @@
         <p:panel id="event-window">
             <center>
                 <p:dataTable styleClass="borderless" id="eventDataTableID" var="event" value="#{profileViewBean.eventList}" scrollable="true" scrollHeight="350">
+                    <f:facet name="header">
+                        <p:outputLabel value="Events" style="color: grey"/>
+                    </f:facet>
                     <p:column>
                        <div style="float: left;" align="left">
                         <h:graphicImage value="images/avatars/#{event.author.userData.avatar}" style="margin-right: 30px; width: 40px; height: 40px; -webkit-clip-path: circle(50%);"/>
                         <h:outputText value="#{event.toString()}"/>
                         <h:graphicImage value="images/#{event.postID.src}" style="width: 40px; margin-left: 30px; height: 40px; #{profileViewBean.forEvent(event)}"/>
-                        <p:separator style="width: 300px; border-width: 0.4px; border-color: lightgrey;"/>
+                        <hr style="width: 470px; height: 0px; border-color: lightgrey; border-width: 0.25px;"/>
+                    </div> 
+                    </p:column>
+                    
+                </p:dataTable>
+            </center>            
+        </p:panel>
+        
+        
+        <!--followers list-->
+        
+        <p:panel id="followers-list-window">
+            <center>
+                <p:dataTable styleClass="borderless" var="follower" value="#{profileViewBean.currentUserFollowers}" scrollable="true" scrollHeight="350">
+                    <f:facet name="header">
+                        <p:outputLabel value="Followers" style="color: grey"/>
+                    </f:facet>
+                    <p:column>
+                       <div style="float: left;" align="left">
+                            <h:graphicImage value="images/avatars/#{profileViewBean.getSomeAvatar(follower.whoName)}" style="margin-right: 30px; width: 40px; height: 40px; -webkit-clip-path: circle(50%);"/>
+                         <h:outputText value="#{follower.whoName}"/>
+                         <hr style="width: 270px; height: 0px; border-color: lightgrey; border-width: 0.25px;"/>
+                     </div> 
+                    </p:column>
+                    
+                </p:dataTable>
+            </center>            
+        </p:panel>
+        
+        
+        <!--followings list-->
+        
+        <p:panel id="followings-list-window">
+            <center>
+                <p:dataTable styleClass="borderless" var="follower" value="#{profileViewBean.currentUserFollowings}" scrollable="true" scrollHeight="350">
+                    <f:facet name="header">
+                        <p:outputLabel value="Followings" style="color: grey"/>
+                    </f:facet>
+                    <p:column>
+                       <div style="float: left;" align="left">
+                           <h:graphicImage value="images/avatars/#{profileViewBean.getSomeAvatar(follower.whomName)}" style="margin-right: 30px; width: 40px; height: 40px; -webkit-clip-path: circle(50%);"/>
+                        <h:outputText value="#{follower.whomName}"/>
+                        <hr style="width: 270px; height: 0px; border-color: lightgrey; border-width: 0.25px;"/>
                     </div> 
                     </p:column>
                     
@@ -292,6 +339,8 @@
         <div id="change-avatar-window-mask" class="mask" onclick="hideWindow('change-avatar-window'); #{createPostBean.toReload()}" />
         <div id="alter-info-window-mask" class="mask" onclick="hideWindow('alter-info-window'); #{createPostBean.toReload()}" />
         <div id="event-window-mask" class="mask" onclick="hideWindow('event-window'); #{createPostBean.toReload()}" />
+        <div id="followers-list-window-mask" class="mask" onclick="hideWindow('followers-list-window'); #{createPostBean.toReload()}" />
+        <div id="followings-list-window-mask" class="mask" onclick="hideWindow('followings-list-window'); #{createPostBean.toReload()}" />
         
         <p:panel class="footer">
             <h:outputLabel value="ShareMoments (c) 2019"  style="color: grey; font-size: 8pt;"/><br/>

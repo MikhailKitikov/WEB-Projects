@@ -27,12 +27,13 @@ public class PhotoPostService {
    @PersistenceContext(unitName = "profiles_persist")
     private EntityManager entityManager;
    
-    public void createPost(String path, String postDescription) {
+    public void createPost(String path, String postDescription, String location) {
         
         PhotoPost photoPost = new PhotoPost();
         photoPost.setUsername((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username"));
         photoPost.setText(postDescription);
         photoPost.setSrc(path);
+        photoPost.setLocation(location);
         photoPost.setDate(new Timestamp(new Date().getTime()));
         entityManager.persist(photoPost);
     }

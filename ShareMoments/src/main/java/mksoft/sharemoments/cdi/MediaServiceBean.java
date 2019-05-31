@@ -68,7 +68,7 @@ public class MediaServiceBean implements Serializable {
             String username = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
             filename = username + "_" + String.valueOf(new Date().getTime()) + tempFilename.substring(tempFilename.lastIndexOf('.'));
             copyFile(destination + filename, file.getInputstream());
-            photoPostDAO.createPost(filename, postDescription);
+            photoPostDAO.createPost(filename, postDescription, location);
             
             File old_file = new File(tempDestination + tempFilename); 
             old_file.delete();

@@ -15,8 +15,10 @@ import mksoft.sharemoments.ejb.EventService;
 import mksoft.sharemoments.ejb.FollowerService;
 import mksoft.sharemoments.ejb.PhotoPostService;
 import mksoft.sharemoments.ejb.PostLikeService;
+import mksoft.sharemoments.ejb.UserService;
 import mksoft.sharemoments.entity.Comment;
 import mksoft.sharemoments.entity.Event;
+import mksoft.sharemoments.entity.Follower;
 import mksoft.sharemoments.entity.PhotoPost;
 import mksoft.sharemoments.entity.User;
 import mksoft.sharemoments.entity.UserData;
@@ -149,7 +151,7 @@ public class ProfileViewBean implements Serializable {
     }
     
     public String likeState() {
-        return (currentPostLikes.contains(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername()) ? "dislike" : "like");
+        return (currentPostLikes.contains(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername()) ? "dislike-button" : "like-button");
     }
     
     
@@ -310,6 +312,27 @@ public class ProfileViewBean implements Serializable {
         String who = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername();
         String whom = ((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername();
         return (followerDAO.isFollowing(who, whom) ? "do not follow" : "follow");
+    }
+    
+    private List<Follower> currentUserFollowers;
+
+    public List<Follower> getCurrentUserFollowers() {
+        currentUserFollowers = followerDAO.getUserFollowers(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername());
+        return currentUserFollowers;
+    }
+    
+    @EJB
+    private UserService userDAO;
+    
+    private List<Follower> currentUserFollowings;
+
+    public List<Follower> getCurrentUserFollowings() {
+        currentUserFollowings = followerDAO.getUserFollowings(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currViewUser")).getUsername());
+        return currentUserFollowings;
+    }
+    
+    public String getSomeAvatar(String username) {
+        return userDAO.userObject(username).getUserData().getAvatar();
     }
     
     

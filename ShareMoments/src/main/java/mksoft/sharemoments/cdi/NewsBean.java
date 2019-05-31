@@ -138,7 +138,7 @@ public class NewsBean implements Serializable {
     }
     
     public String likeState() {
-        return (currentPostLikes.contains(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername()) ? "dislike" : "like");
+        return (currentPostLikes.contains(((User)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username")).getUsername()) ? "dislike-button" : "like-button");
     }
     
     

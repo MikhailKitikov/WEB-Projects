@@ -22,10 +22,10 @@ import org.apache.commons.lang3.StringUtils;
 @SessionScoped
 public class AlterInfoBean implements Serializable {
     
-    private String password;
-    private String confirmPassword;
-    private String name;
-    private String bio;
+    private static String password;
+    private static String confirmPassword;
+    private static String name;
+    private static String bio;
     
     @EJB
     private UserService userDAO;
@@ -37,7 +37,7 @@ public class AlterInfoBean implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        AlterInfoBean.password = password;
     }
 
     public String getConfirmPassword() {
@@ -45,39 +45,35 @@ public class AlterInfoBean implements Serializable {
     }
 
     public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
+        AlterInfoBean.confirmPassword = confirmPassword;
     }
 
     public String getName() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        User user = (User)context.getExternalContext().getSessionMap().get("username");
+        name = user.getUserData().getName();
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        AlterInfoBean.name = name;
     }
 
     public String getBio() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        User user = (User)context.getExternalContext().getSessionMap().get("username");
+        bio = user.getUserData().getBio();
         return bio;
     }
 
     public void setBio(String bio) {
-        this.bio = bio;
+        AlterInfoBean.bio = bio;
     }
     
     public AlterInfoBean() {
     }
     
     // altering
-    
-    public void preload() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        User user = (User)context.getExternalContext().getSessionMap().get("username");
-        if (user.getUserData() == null)
-            return;
-        name = user.getUserData().getName();
-        bio = user.getUserData().getBio();
-        
-    }
     
     private String oldPassword;
 
@@ -96,24 +92,31 @@ public class AlterInfoBean implements Serializable {
         User user = userDAO.userObject(uname);
         context.getExternalContext().getSessionMap().put("username", user);
         context.getExternalContext().getSessionMap().put("currViewUser", user);
+        context.addMessage("alter-info-form", new FacesMessage(FacesMessage.SEVERITY_INFO, "OK", "Data changed successfully!"));
     }
     
     boolean validatePassword() {
         FacesContext context = FacesContext.getCurrentInstance();
         User user = (User)context.getExternalContext().getSessionMap().get("username");
-        if (oldPassword == null || password == null || confirmPassword == null)
+        if (oldPassword == null || password == null || confirmPassword == null || 
+                oldPassword.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Empty password"));
             return false;
-        if (!oldPassword.equals(user.getPassword()))
+        }            
+        if (!oldPassword.equals(user.getPassword())) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Incorrect password"));
             return false;
-        if (!password.equals(confirmPassword))
+        }        
+        if (!password.equals(confirmPassword)) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Passwords do not match"));
             return false;
+        }        
         return true;
     }
 
     public void alterPassword() {
         
         if (!validatePassword()) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Passwords do not match"));
             return;
         }
         FacesContext context = FacesContext.getCurrentInstance();
@@ -122,5 +125,6 @@ public class AlterInfoBean implements Serializable {
         User user = userDAO.userObject(username);
         context.getExternalContext().getSessionMap().put("username", user);
         context.getExternalContext().getSessionMap().put("currViewUser", user);
+        context.addMessage("alter-pswrd-form", new FacesMessage(FacesMessage.SEVERITY_INFO, "OK", "Password changed successfully!"));
     }
 }

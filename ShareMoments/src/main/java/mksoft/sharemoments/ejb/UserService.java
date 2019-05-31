@@ -84,7 +84,7 @@ public class UserService {
         UserData userData = entityManager.find(UserData.class, user.getUsername());
         if (userData == null)
             return;
-        Query query = entityManager.createNamedQuery("UserData.changePssword");
+        Query query = entityManager.createNamedQuery("User.changePassword");
         query.setParameter("username", user.getUsername());
         query.setParameter("password", password);
         query.executeUpdate();
