@@ -42,7 +42,9 @@ public class PhotoPostService {
         
         FacesContext facesContext = FacesContext.getCurrentInstance();   
         Query query = entityManager.createNamedQuery("PhotoPost.findByUsername").setParameter("username", (User)facesContext.getExternalContext().getSessionMap().get("currViewUser"));
-        return query.getResultList();
+        List<PhotoPost> res = query.getResultList();
+        Collections.sort(res);
+        return res;
     }
     
     public List<PhotoPost> getCurrentUserNews() {    

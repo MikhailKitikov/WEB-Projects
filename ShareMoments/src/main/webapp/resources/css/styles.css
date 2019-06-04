@@ -193,6 +193,17 @@ td {
     z-index: 4000;
 }
 
+#like-list-window {
+    position: fixed;
+    height: 400px;
+    width: 300px;
+    left: 0; right: 0; margin-left: auto; margin-right: auto;
+    top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
+    border: 0;
+    display: none;
+    z-index: 20000000;
+}
+
 .fff {
     position: fixed;
     z-index: 1000000;

@@ -89,6 +89,12 @@ public class NewsBean implements Serializable {
     }
     
     
+    public String currentPostDate() {
+        if (currImageIndex < 0 || currImageIndex >= currentUserNews.size() || currentUserNews.get(currImageIndex).getLocation() == null) 
+            return " ";
+        return currentUserNews.get(currImageIndex).getDate().toString();
+    }
+    
     // likes
     
     @EJB
@@ -97,7 +103,7 @@ public class NewsBean implements Serializable {
     private static List<String> currentPostLikes;
     
     public List<String> getCurrentPostLikes() {
-        if (currImageIndex < 0) return null;
+        if (currImageIndex < 0 || currImageIndex >= currentUserNews.size()) return null;
         currentPostLikes = postLikeDAO.getCurrentPostLikes(currentUserNews.get(currImageIndex).getId());
         return currentPostLikes;
     }    

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,6 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "PhotoPost.findByLocation", query = "SELECT p FROM PhotoPost p WHERE p.location = :location"),
     @NamedQuery(name = "PhotoPost.findByUsername", query = "SELECT p FROM PhotoPost p WHERE p.username = :username")})
 public class PhotoPost implements Serializable, Comparable<Object> {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postID")
+    private Collection<PostLike> postLikeCollection;
 
     @OneToMany(mappedBy = "postID")
     private Collection<Event> eventCollection;
@@ -151,7 +155,7 @@ public class PhotoPost implements Serializable, Comparable<Object> {
     
     @Override
     public int compareTo(Object object) {
-        return -(int) (this.getDate().getTime() - ((PhotoPost)object).getDate().getTime());
+        return (((PhotoPost)object).getDate()).compareTo(this.getDate());
     }
 
     @Override
@@ -166,6 +170,15 @@ public class PhotoPost implements Serializable, Comparable<Object> {
 
     public void setEventCollection(Collection<Event> eventCollection) {
         this.eventCollection = eventCollection;
+    }
+
+    @XmlTransient
+    public Collection<PostLike> getPostLikeCollection() {
+        return postLikeCollection;
+    }
+
+    public void setPostLikeCollection(Collection<PostLike> postLikeCollection) {
+        this.postLikeCollection = postLikeCollection;
     }
     
 }

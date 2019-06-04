@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
@@ -72,6 +73,8 @@ public class MediaServiceBean implements Serializable {
             
             File old_file = new File(tempDestination + tempFilename); 
             old_file.delete();
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "OK", "Post created successfully"));
         }
         catch (IOException e) {
             e.getMessage();
@@ -193,6 +196,8 @@ public class MediaServiceBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("currViewUser", user);
             RequestContext.getCurrentInstance().update(":avatar");
             toUpdate = true;
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "OK", "Avatar changed successfully"));
         }
         catch (IOException e) {
             e.getMessage();

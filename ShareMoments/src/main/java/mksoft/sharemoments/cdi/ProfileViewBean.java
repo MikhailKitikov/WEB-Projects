@@ -110,7 +110,7 @@ public class ProfileViewBean implements Serializable {
     private static List<String> currentPostLikes;
     
     public List<String> getCurrentPostLikes() {
-        if (currImageIndex < 0) return null;
+        if (currImageIndex < 0 || currImageIndex >= currentUserPhotoPosts.size()) return null;
         currentPostLikes = postLikeDAO.getCurrentPostLikes(currentUserPhotoPosts.get(currImageIndex).getId());
         return currentPostLikes;
     }    
@@ -180,6 +180,12 @@ public class ProfileViewBean implements Serializable {
         if (currImageIndex < 0 || currImageIndex >= currentUserPhotoPosts.size() || currentUserPhotoPosts.get(currImageIndex).getLocation() == null) 
             return " ";
         return currentUserPhotoPosts.get(currImageIndex).getLocation();
+    }
+    
+    public String currentPostDate() {
+        if (currImageIndex < 0 || currImageIndex >= currentUserPhotoPosts.size() || currentUserPhotoPosts.get(currImageIndex).getLocation() == null) 
+            return " ";
+        return currentUserPhotoPosts.get(currImageIndex).getDate().toString();
     }
     
     private static boolean renderComments = false;

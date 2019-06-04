@@ -45,8 +45,14 @@ public class SearchBean implements Serializable {
     }
     
     public void onItemSelect(SelectEvent event) throws IOException {
+        viewSomebody(username);
+    }
+    
+    public void viewSomebody(String uname) throws IOException {
+        if (uname == null || uname.isEmpty())
+            return;
         FacesContext context = FacesContext.getCurrentInstance();
-        User user = userDAO.userObject(username);
+        User user = userDAO.userObject(uname);
         context.getExternalContext().getSessionMap().put("currViewUser", user);
         FacesContext.getCurrentInstance().getExternalContext().redirect("profilePage.xhtml");
     }

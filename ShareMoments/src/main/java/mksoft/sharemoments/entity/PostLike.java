@@ -26,10 +26,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "PostLike.findAll", query = "SELECT p FROM PostLike p")
     , @NamedQuery(name = "PostLike.removeLike", query = "DELETE FROM PostLike p WHERE p.authorName = :authorName AND p.postID = :postID")
-    , @NamedQuery(name = "PostLike.findByPost", query = "SELECT p.authorName FROM PostLike p WHERE p.postID = :postID")
+    , @NamedQuery(name = "PostLike.findByPost", query = "SELECT p.authorName.username FROM PostLike p WHERE p.postID = :postID")
     , @NamedQuery(name = "PostLike.findById", query = "SELECT p FROM PostLike p WHERE p.id = :id")
     , @NamedQuery(name = "PostLike.findByAuthorName", query = "SELECT p FROM PostLike p WHERE p.authorName = :authorName")})
 public class PostLike implements Serializable {
+
+    @JoinColumn(name = "author_name", referencedColumnName = "username")
+    @ManyToOne(optional = false)
+    private User authorName;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,11 +41,6 @@ public class PostLike implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 60)
-    @Column(name = "author_name")
-    private String authorName;
     @JoinColumn(name = "postID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private PhotoPost postID;
@@ -53,7 +52,7 @@ public class PostLike implements Serializable {
         this.id = id;
     }
 
-    public PostLike(Integer id, String authorName) {
+    public PostLike(Integer id, User authorName) {
         this.id = id;
         this.authorName = authorName;
     }
@@ -66,11 +65,11 @@ public class PostLike implements Serializable {
         this.id = id;
     }
 
-    public String getAuthorName() {
+    public User getAuthorName() {
         return authorName;
     }
 
-    public void setAuthorName(String authorName) {
+    public void setAuthorName(User authorName) {
         this.authorName = authorName;
     }
 

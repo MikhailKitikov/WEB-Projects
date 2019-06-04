@@ -32,7 +32,7 @@ public class PostLikeService {
         }
         PostLike like = new PostLike(100);
         like.setPostID(new PhotoPost(targPostID));
-        like.setAuthorName(from);
+        like.setAuthorName(new User(from));
         entityManager.persist(like);
         return true;
     }
@@ -42,7 +42,7 @@ public class PostLikeService {
             return false;
         }
         Query query = entityManager.createNamedQuery("PostLike.removeLike");
-        query.setParameter("authorName", from);
+        query.setParameter("authorName", new User(from));
         query.setParameter("postID", new PhotoPost(targPostID));
         query.executeUpdate();
         return true;
