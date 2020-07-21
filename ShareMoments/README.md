@@ -1,0 +1,1 @@
+JSF based social network for sharing photos and videos
