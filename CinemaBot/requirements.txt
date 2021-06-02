@@ -19,5 +19,5 @@ flask
 gunicorn==20.0.4
 kinopoiskpy==0.8.2
 python-dateutil==2.6.1
-urllib3==1.22
+urllib3==1.26.5
 git+git://github.com/nficano/pytube#egg=pytube
