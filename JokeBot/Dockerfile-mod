@@ -1,0 +1,4 @@
+FROM smeliana:0.1
+COPY . /smeliana
+WORKDIR /smeliana
+ENTRYPOINT ["python", "./main.py"]
